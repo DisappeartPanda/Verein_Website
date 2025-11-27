@@ -1,0 +1,42 @@
+---
+const events = [
+  {
+    title: "Open Community Night",
+    meta: "Jeden Freitag · 18:00 – 22:00 Uhr",
+    text:
+      "Freier Treff mit Gaming-Stations, Musik, Kreativ-Ecke und viel Raum für deine Ideen.",
+  },
+  {
+    title: "Creative Lab: Content & Streaming",
+    meta: "Monatliche Workshop-Reihe",
+    text:
+      "Wir sprechen über Streaming-Setups, Social-Media-Content und Community-Building – inkl. Praxis-Sessions.",
+  },
+  {
+    title: "Level Up Culture Day",
+    meta: "1× pro Jahr · Großes Vereinsevent",
+    text:
+      "Ein Tag mit Programm, Live-Acts, Gaming, Talks und Mitmach-Aktionen – gemeinsam geplant mit der Community.",
+  },
+];
+---
+
+<section id="events" class="section">
+  <div class="section-inner">
+    <h2>Aktuelle &amp; kommende Events</h2>
+    <p class="section-text">
+      Trage hier eure echten Termine ein. Die folgende Liste sind Beispiele,
+      damit du die Struktur siehst.
+    </p>
+
+    <div class="timeline">
+      {events.map((event) => (
+        <article class="timeline-item">
+          <h3>{event.title}</h3>
+          <p class="timeline-meta">{event.meta}</p>
+          <p class="timeline-text">{event.text}</p>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>

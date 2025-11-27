@@ -1,0 +1,27 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+import Hero from "../components/Hero.astro";
+import AboutSection from "../components/AboutSection.astro";
+import OffersSection from "../components/OffersSection.astro";
+import EventsSection from "../components/EventsSection.astro";
+import MembershipSection from "../components/MembershipSection.astro";
+import ContactSection from "../components/ContactSection.astro";
+import SiteFooter from "../components/SiteFooter.astro";
+---
+
+<BaseLayout>
+  <div class="page-root">
+    <Hero />
+
+    <main>
+      <AboutSection />
+      <OffersSection />
+      <EventsSection />
+      <MembershipSection />
+      <ContactSection />
+    </main>
+
+    <SiteFooter />
+  </div>
+</BaseLayout>

@@ -1,0 +1,393 @@
+---
+---
+
+<header class="hero">
+  <div class="hero-inner">
+    <!-- Top Nav -->
+    <div class="hero-nav">
+      <a href="#top" class="hero-brand">
+        <div class="hero-logo">
+          <img
+  src="/logo-verein.svg"
+  alt="Level Up Culture e.V. Logo"
+  loading="eager"
+/>
+
+        </div>
+        <div class="hero-brand-text">
+          <span class="hero-brand-name">Level Up Culture e.V.</span>
+          <span class="hero-brand-tagline">Kultur • Gaming • Community</span>
+        </div>
+      </a>
+
+      <nav class="hero-nav-links">
+        <a href="#about">Über uns</a>
+        <a href="#angebote">Angebote</a>
+        <a href="#events">Events</a>
+        <a href="#mitgliedschaft">Mitgliedschaft</a>
+        <a href="#kontakt" class="hero-nav-cta btn btn-secondary">Kontakt</a>
+      </nav>
+    </div>
+
+    <!-- Split Hero -->
+    <div class="hero-grid">
+      <div class="hero-copy">
+
+        <h1 class="hero-title">
+          Gemeinsam Kultur &amp; Gaming
+          <span class="hero-title-highlight">auf das nächste Level bringen.</span>
+        </h1>
+
+        <p class="hero-subtitle">
+          Level Up Culture e.V. verbindet junge Menschen über Gaming, Musik und
+          kreative Projekte. Ob Einsteiger*in oder Pro – bei uns findest du eine
+          Community, in der du dich ausprobieren und mitgestalten kannst.
+        </p>
+
+        <div class="hero-actions">
+          <a href="#mitgliedschaft" class="btn btn-primary">
+            Mitglied werden
+          </a>
+          <a href="#events" class="btn btn-secondary">Nächste Events ansehen</a>
+        </div>
+
+        <div class="hero-meta">
+          <span>Offene Community-Abende · Workshops · Events</span>
+          <span class="hero-meta-dot">•</span>
+          <span>Für Jugendliche &amp; junge Erwachsene</span>
+        </div>
+      </div>
+
+      <!-- "Produkt"-Card rechts (Mockup wie bei Perspective) -->
+      <div class="hero-visual">
+        <div class="hero-device-shadow" aria-hidden="true"></div>
+        <div class="hero-device">
+          <div class="hero-device-header">
+            <span class="hero-device-pill">Nächstes Event</span>
+            <span class="hero-device-status">Plätze verfügbar</span>
+          </div>
+
+          <div class="hero-device-body">
+            <div class="hero-device-event">
+              <h2>Open Community Night</h2>
+              <p>Jeden Freitag · 18:00 – 22:00 Uhr</p>
+              <ul>
+                <li>Gaming-Stationen &amp; kleine Turniere</li>
+                <li>Kreativ-Ecke für eigene Projekte</li>
+                <li>Raum zum Ankommen &amp; Chillen</li>
+              </ul>
+            </div>
+
+            <div class="hero-device-card">
+              <div>
+                <span class="hero-device-label">Teilnehmende letzte Woche</span>
+                <strong>27</strong>
+              </div>
+              <div class="hero-device-chip">Jugendzentrum</div>
+            </div>
+
+            <button class="btn btn-primary hero-device-cta">
+              Ich möchte teilnehmen
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<style>
+  .hero {
+  position: relative;
+  padding: 2.8rem 1.5rem 4.8rem;
+  overflow: hidden;
+}
+
+/* … darunter neu: */
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: -40%;
+  background:
+    radial-gradient(circle at top left, rgba(37, 99, 235, 0.08), transparent 60%),
+    radial-gradient(circle at bottom right, rgba(79, 70, 229, 0.06), transparent 60%);
+  z-index: -1;
+}
+
+
+  .hero-inner {
+    max-width: 1120px;
+    margin: 0 auto;
+  }
+
+  /* NAVIGATION */
+  .hero-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    padding: 0.6rem 0 1.4rem;
+  }
+
+  .hero-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .hero-logo {
+  width: 72px;
+  height: 72px;
+  border-radius: 999px;
+  background: #ffffff;
+  border: 1px solid var(--border-soft);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.18);
+}
+
+
+  .hero-brand-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+  }
+
+  .hero-brand-name {
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+
+  .hero-brand-tagline {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+  }
+
+  .hero-nav-links {
+    display: none;
+    align-items: center;
+    gap: 1.3rem;
+    font-size: 0.9rem;
+  }
+
+  .hero-nav-links a {
+    color: var(--text-muted);
+  }
+
+  .hero-nav-links a:hover {
+    color: var(--accent);
+  }
+
+  @media (min-width: 880px) {
+    .hero-nav-links {
+      display: flex;
+    }
+  }
+
+  .hero-nav-cta {
+    font-size: 0.9rem;
+    padding-inline: 1rem;
+  }
+
+  /* SPLIT HERO */
+  .hero-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr);
+    gap: 2.3rem;
+    align-items: center;
+    margin-top: 0.5rem;
+  }
+
+  @media (min-width: 960px) {
+    .hero-grid {
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+    }
+  }
+
+  .hero-copy {
+    max-width: 560px;
+  }
+
+  .hero-title {
+  margin: 1.4rem 0 1rem;
+  font-size: clamp(2.6rem, 4vw + 1.8rem, 3.8rem);
+  letter-spacing: 0.02em;
+  line-height: 1.1;
+}
+
+
+  .hero-title-highlight {
+    display: block;
+  }
+
+  .hero-subtitle {
+    margin: 0 0 1.4rem;
+    font-size: 1rem;
+    color: var(--text-muted);
+    line-height: 1.7;
+  }
+
+  .hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.9rem;
+  margin: 1.4rem 0 1.2rem;
+}
+
+
+
+  .hero-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    align-items: center;
+  }
+
+  .hero-meta-dot {
+    opacity: 0.5;
+  }
+
+  /* DEVICE CARD – inspiriert von Perspective */
+  .hero-visual {
+    position: relative;
+    display: flex;
+    justify-content: center;
+  }
+
+  .hero-device-shadow {
+    position: absolute;
+    inset: 20% 8% -5%;
+    background: radial-gradient(circle at 20% 0, rgba(37, 99, 235, 0.25), transparent),
+      radial-gradient(circle at 80% 100%, rgba(79, 70, 229, 0.35), transparent);
+    filter: blur(24px);
+    opacity: 0.9;
+    z-index: 0;
+  }
+
+  .hero-device {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 360px;
+    border-radius: 1.8rem;
+    padding: 1.3rem 1.2rem 1.5rem;
+    background: #ffffff;
+    box-shadow: 0 26px 70px rgba(15, 23, 42, 0.22);
+    border: 1px solid rgba(148, 163, 184, 0.4);
+  }
+
+  .hero-device-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    font-size: 0.8rem;
+  }
+
+  .hero-device-pill {
+    padding: 0.2rem 0.7rem;
+    border-radius: 999px;
+    background: #eff6ff;
+    color: #1d4ed8;
+    font-weight: 500;
+  }
+
+  .hero-device-status {
+    color: #16a34a;
+    font-weight: 500;
+  }
+
+  .hero-device-body {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .hero-device-event h2 {
+    margin: 0 0 0.2rem;
+    font-size: 1.1rem;
+  }
+
+  .hero-device-event p {
+    margin: 0 0 0.6rem;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+  }
+
+  .hero-device-event ul {
+    margin: 0;
+    padding-left: 1.1rem;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    display: grid;
+    gap: 0.2rem;
+  }
+
+  .hero-device-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.65rem 0.8rem;
+    border-radius: 0.9rem;
+    background: #f9fafb;
+    border: 1px solid var(--border-soft);
+    font-size: 0.85rem;
+  }
+
+  .hero-device-label {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+  }
+
+  .hero-device-card strong {
+    display: block;
+    font-size: 1rem;
+  }
+
+  .hero-device-chip {
+    padding: 0.2rem 0.65rem;
+    border-radius: 999px;
+    background: #eef2ff;
+    color: #4338ca;
+    font-size: 0.75rem;
+    font-weight: 500;
+  }
+
+  .hero-device-cta {
+    width: 100%;
+    justify-content: center;
+    font-size: 0.9rem;
+    padding-block: 0.7rem;
+  }
+
+  /* TRUST BAR */
+  .hero-trust {
+    margin-top: 2.4rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(148, 163, 184, 0.4);
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+  }
+
+  @media (min-width: 720px) {
+    .hero-trust {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+    }
+  }
+
+  .hero-trust-logos {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+    font-weight: 500;
+  }
+</style>

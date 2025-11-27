@@ -1,0 +1,38 @@
+---
+const offers = [
+  {
+    title: "Community-Abende",
+    text:
+      "Offene Treffen mit Gaming-Stationen, Musik, kleinen Turnieren und Platz zum Chillen. Perfekt, um die Community kennenzulernen.",
+  },
+  {
+    title: "Workshops & Labs",
+    text:
+      "Von Streaming-Basics über Content-Creation bis hin zu Musik- oder Design-Projekten – begleitet von erfahrenen Ehrenamtlichen.",
+  },
+  {
+    title: "Events & Projekte",
+    text:
+      "Themen-Wochenenden, Festival-Aktionen und Kooperationen mit Jugendzentren, Schulen und lokalen Initiativen.",
+  },
+];
+---
+
+<section id="angebote" class="section">
+  <div class="section-inner">
+    <h2>Was wir anbieten</h2>
+    <p class="section-text">
+      Unsere Formate sind so aufgebaut, dass du leicht einsteigen und dich
+      Schritt für Schritt stärker einbringen kannst.
+    </p>
+
+    <div class="grid-3">
+      {offers.map((offer) => (
+        <article class="card">
+          <h3>{offer.title}</h3>
+          <p>{offer.text}</p>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
