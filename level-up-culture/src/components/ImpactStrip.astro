@@ -1,0 +1,64 @@
+---
+const stats = [
+  {
+    label: "aktive Mitglieder",
+    value: "32+",
+  },
+  {
+    label: "Events & Treffen im Jahr",
+    value: "40+",
+  },
+  {
+    label: "Kooperationsideen in Planung",
+    value: "10+",
+  },
+];
+---
+
+<section class="section">
+  <div class="section-inner impact-strip">
+    {stats.map((item) => (
+      <article class="impact-card">
+        <div class="impact-value">{item.value}</div>
+        <div class="impact-label">{item.label}</div>
+      </article>
+    ))}
+  </div>
+</section>
+
+<style>
+  .impact-strip {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+  }
+
+  @media (max-width: 720px) {
+    .impact-strip {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .impact-card {
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border-soft);
+    background: radial-gradient(circle at top left, var(--brand-soft), #ffffff);
+    box-shadow: var(--shadow-soft);
+    padding: 1.3rem 1.4rem;
+    text-align: center;
+  }
+
+  .impact-value {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: var(--brand-dark);
+    margin-bottom: 0.3rem;
+  }
+
+  .impact-label {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+  }
+</style>

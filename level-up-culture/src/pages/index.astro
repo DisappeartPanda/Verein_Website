@@ -8,17 +8,22 @@ import EventsSection from "../components/EventsSection.astro";
 import MembershipSection from "../components/MembershipSection.astro";
 import ContactSection from "../components/ContactSection.astro";
 import SiteFooter from "../components/SiteFooter.astro";
+import ImpactStrip from "../components/ImpactStrip.astro";
+import FAQSection from "../components/FAQSection.astro";
 ---
 
 <BaseLayout>
+  <div class="page-root home-page">
   <div class="page-root">
     <Hero />
+	<ImpactStrip />
 
     <main>
       <AboutSection />
       <OffersSection />
       <EventsSection />
       <MembershipSection />
+	  <FAQSection />
       <ContactSection />
     </main>
 

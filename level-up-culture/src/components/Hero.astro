@@ -3,31 +3,6 @@
 
 <header class="hero">
   <div class="hero-inner">
-    <!-- Top Nav -->
-    <div class="hero-nav">
-      <a href="#top" class="hero-brand">
-        <div class="hero-logo">
-          <img
-  src="/logo-verein.svg"
-  alt="Level Up Culture e.V. Logo"
-  loading="eager"
-/>
-
-        </div>
-        <div class="hero-brand-text">
-          <span class="hero-brand-name">Level Up Culture e.V.</span>
-          <span class="hero-brand-tagline">Kultur • Gaming • Community</span>
-        </div>
-      </a>
-
-      <nav class="hero-nav-links">
-        <a href="#about">Über uns</a>
-        <a href="#angebote">Angebote</a>
-        <a href="#events">Events</a>
-        <a href="#mitgliedschaft">Mitgliedschaft</a>
-        <a href="#kontakt" class="hero-nav-cta btn btn-secondary">Kontakt</a>
-      </nav>
-    </div>
 
     <!-- Split Hero -->
     <div class="hero-grid">
@@ -38,23 +13,13 @@
           <span class="hero-title-highlight">auf das nächste Level bringen.</span>
         </h1>
 
-        <p class="hero-subtitle">
-          Level Up Culture e.V. verbindet junge Menschen über Gaming, Musik und
-          kreative Projekte. Ob Einsteiger*in oder Pro – bei uns findest du eine
-          Community, in der du dich ausprobieren und mitgestalten kannst.
-        </p>
+      
 
         <div class="hero-actions">
           <a href="#mitgliedschaft" class="btn btn-primary">
             Mitglied werden
           </a>
           <a href="#events" class="btn btn-secondary">Nächste Events ansehen</a>
-        </div>
-
-        <div class="hero-meta">
-          <span>Offene Community-Abende · Workshops · Events</span>
-          <span class="hero-meta-dot">•</span>
-          <span>Für Jugendliche &amp; junge Erwachsene</span>
         </div>
       </div>
 
@@ -96,11 +61,27 @@
   </div>
 </header>
 
+<script>
+  if (typeof window !== "undefined") {
+    const onScroll = () => {
+      const nav = document.querySelector(".hero-nav");
+      if (!nav) return;
+
+      if (window.scrollY > 40) {
+        nav.classList.add("hero-nav--fixed");
+      } else {
+        nav.classList.remove("hero-nav--fixed");
+      }
+    };
+
+    window.addEventListener("scroll", onScroll);
+    onScroll();
+  }
+</script>
+
 <style>
   .hero {
   position: relative;
-  padding: 2.8rem 1.5rem 4.8rem;
-  overflow: hidden;
 }
 
 /* … darunter neu: */
@@ -122,55 +103,113 @@
 
   /* NAVIGATION */
   .hero-nav {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1.5rem;
-    padding: 0.6rem 0 1.4rem;
-  }
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
 
-  .hero-brand {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.75rem;
-  }
+  /* Abstand nach oben/unten im normalen Zustand */
+  padding: 0 0 2.8rem;
 
-  .hero-logo {
-  width: 72px;
-  height: 72px;
+  transition:
+    background 0.2s ease,
+    box-shadow 0.2s ease,
+    padding 0.2s ease,
+    border-radius 0.2s ease,
+    transform 0.2s ease;
+}
+
+.hero-nav--fixed {
+  position: fixed;
+  top: 0.75rem;
+  left: 50%;
+  transform: translateX(-50%);
+
+  /* gleiche seitliche Abstände wie dein Layout (2rem gesamt) */
+  width: min(100% - 3rem, 1120px);
+
+  padding: 0.55rem 1.3rem;
+  border-radius: 999px;
+
+  background: rgba(255, 255, 255, 0.97);
+  box-shadow: 0 14px 30px rgba(15, 47, 70, 0.22);
+  z-index: 80;
+}
+
+
+
+
+  .hero-brand-horizontal {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+
+
+ .hero-logo-mega {
+  width: 68px;     /* ✅ ca. 2× so groß wie Nav & Name */
+  height: 68px;
   border-radius: 999px;
   background: #ffffff;
-  border: 1px solid var(--border-soft);
+  border: 2px solid rgba(37, 99, 235, 0.6);
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 10px;
-  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.18);
+  padding: 8px;
+  box-shadow:
+    0 12px 30px rgba(15, 23, 42, 0.25),
+    0 0 0 8px rgba(37, 99, 235, 0.08);
+  position: relative;
 }
 
 
-  .hero-brand-text {
-    display: flex;
-    flex-direction: column;
-    gap: 0.1rem;
-  }
-
-  .hero-brand-name {
-  font-weight: 700;
-  font-size: 1.1rem;
+/* Mega-Glow */
+.hero-logo-mega::before {
+  content: "";
+  position: absolute;
+  inset: -34px;
+  border-radius: inherit;
+  background: radial-gradient(
+    circle,
+    rgba(37, 99, 235, 0.45),
+    rgba(79, 70, 229, 0.0) 70%
+  );
+  filter: blur(18px);
+  z-index: -1;
 }
 
 
-  .hero-brand-tagline {
-    font-size: 0.8rem;
-    color: var(--text-muted);
-  }
+  .hero-brand-text-horizontal {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.15rem;
+}
+
+
+.hero-brand-name {
+  font-weight: 800;
+  font-size: 1.6rem;
+  letter-spacing: 0.04em;
+}
+
+.hero-brand-tagline-inline {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  line-height: 1.1;
+}
+
+
 
   .hero-nav-links {
     display: none;
     align-items: center;
     gap: 1.3rem;
-    font-size: 0.9rem;
+    font-size: 1.2rem;
   }
 
   .hero-nav-links a {
@@ -390,4 +429,45 @@
     gap: 0.8rem;
     font-weight: 500;
   }
+
+  @media (max-width: 640px) {
+  .hero-logo-strong {
+    width: 110px;
+    height: 110px;
+    padding: 14px;
+  }
+
+  .hero-brand-name {
+    font-size: 1.25rem;
+  }
+}
+
+.hero-brand-textonly {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 2.6rem;
+  text-align: center;
+}
+
+@media (max-width: 640px) {
+  .hero-logo-mega {
+    width: 120px;
+    height: 120px;
+    padding: 14px;
+  }
+}
+
+.hero-brand-name-inline {
+  font-size: 0.9rem;        /* ✅ EXAKT NAVBAR-GRÖSSE */
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-main);
+  line-height: 1.1;
+}
+
+
+
 </style>

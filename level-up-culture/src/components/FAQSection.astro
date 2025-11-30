@@ -1,0 +1,75 @@
+---
+const faqs = [
+  {
+    q: "Für wen ist Level Up Culture e.V. gedacht?",
+    a:
+      "Vor allem für Jugendliche und junge Erwachsene, die sich für Gaming, Kultur, Medien und Community interessieren – egal ob Einsteiger*in oder erfahren.",
+  },
+  {
+    q: "Muss ich Mitglied sein, um vorbeizukommen?",
+    a:
+      "Nein. Viele unserer Angebote kannst du auch ohne Mitgliedschaft ausprobieren. Wenn du regelmäßig dabei sein willst, lohnt sich eine Mitgliedschaft.",
+  },
+  {
+    q: "Entstehen Kosten für die Teilnahme?",
+    a:
+      "Viele Angebote sind kostenfrei oder gegen einen kleinen Beitrag möglich. Details hängen vom jeweiligen Event ab.",
+  },
+];
+---
+
+<section class="section">
+  <div class="section-inner section-inner-narrow">
+    <h2>FAQ</h2>
+    <p class="section-text">
+      Die häufigsten Fragen rund um den Verein, Mitgliedschaft und Teilnahme.
+    </p>
+
+    <div class="faq-list">
+      {faqs.map((item) => (
+        <details class="faq-item">
+          <summary>{item.q}</summary>
+          <p>{item.a}</p>
+        </details>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .faq-list {
+    display: grid;
+    gap: 0.7rem;
+  }
+
+  .faq-item {
+    border-radius: 1rem;
+    border: 1px solid var(--border-soft);
+    background: #ffffff;
+    padding: 0.75rem 1rem;
+    box-shadow: 0 10px 26px rgba(15, 47, 70, 0.08);
+  }
+
+  .faq-item summary {
+    list-style: none;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--brand-dark);
+  }
+
+  .faq-item summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .faq-item[open] {
+    border-color: var(--brand-main);
+    box-shadow: 0 14px 36px rgba(15, 47, 70, 0.16);
+  }
+
+  .faq-item p {
+    margin: 0.6rem 0 0;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+  }
+</style>

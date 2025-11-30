@@ -1,4 +1,7 @@
 ---
+import NavBar from "../components/NavBar.astro";
+
+
 const {
   title = "Level Up Culture e.V.",
   description = "Verein für Kultur, Gaming & Community.",
@@ -9,6 +12,11 @@ const {
 <html lang="de">
 
   <head>
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="apple-touch-icon" href="/favicon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+
+
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
@@ -23,25 +31,40 @@ const {
     />
   </head>
   <body class="app-body">
+    <NavBar />
+
     <slot />
 
     <style is:global>
       :root {
-        --bg-page: #f3f4f6;
-        --bg-surface: #ffffff;
-        --bg-soft: #f9fafb;
+  /* ✅ Farben aus dem Favicon abgeleitet */
+  --brand-dark: #0f2f46;     /* dunkles Navy aus der rechten Hand */
+  --brand-main: #1f6f9c;     /* mittleres Blau */
+  --brand-light: #5fa8d3;    /* helles Blau */
+  --brand-soft: #e8f3fb;    /* sehr helles Blau für Hintergründe */
 
-        --accent: #2563eb;       /* blau wie Perspective */
-        --accent-soft: #dbeafe;
-        --accent-strong: #1d4ed8;
+  /* ✅ Seitenfarben */
+  --bg-page: #f4f9fc;
+  --bg-surface: #ffffff;
+  --bg-soft: var(--brand-soft);
 
-        --text-main: #020617;
-        --text-muted: #6b7280;
-        --border-soft: #e5e7eb;
-        --radius-lg: 1.25rem;
-        --radius-xl: 1.75rem;
-        --shadow-soft: 0 22px 45px rgba(15, 23, 42, 0.12);
-      }
+  /* ✅ Texte */
+  --text-main: #0f2f46;
+  --text-muted: #5b7285;
+
+  /* ✅ Akzent / Buttons */
+  --accent: var(--brand-main);
+  --accent-soft: rgba(31, 111, 156, 0.15);
+
+  /* ✅ Rahmen & Schatten */
+  --border-soft: rgba(15, 47, 70, 0.12);
+  --shadow-soft: 0 18px 45px rgba(15, 47, 70, 0.15);
+
+  --radius-lg: 1.25rem;
+}
+
+
+      
 
       * {
         box-sizing: border-box;
@@ -117,27 +140,31 @@ section[id] {
 }
 
 
-      .btn-primary {
-        background: linear-gradient(135deg, #2563eb, #4f46e5);
-        color: #f9fafb;
-        box-shadow: 0 14px 30px rgba(37, 99, 235, 0.35);
-      }
+     .btn-primary {
+  background: linear-gradient(
+    135deg,
+    var(--brand-main),
+    var(--brand-dark)
+  );
+  color: #ffffff;
+  box-shadow: 0 14px 30px rgba(31, 111, 156, 0.35);
+}
 
-      .btn-primary:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 20px 46px rgba(37, 99, 235, 0.45);
-      }
+.btn-primary:hover {
+  box-shadow: 0 18px 40px rgba(31, 111, 156, 0.45);
+}
 
-      .btn-secondary {
-        background: #ffffff;
-        border-color: var(--border-soft);
-        color: var(--text-main);
-      }
+.btn-secondary {
+  background: #ffffff;
+  border-color: var(--border-soft);
+  color: var(--brand-dark);
+}
 
-      .btn-secondary:hover {
-        border-color: var(--accent);
-        color: var(--accent);
-      }
+.btn-secondary:hover {
+  border-color: var(--brand-main);
+  color: var(--brand-main);
+}
+
 
       /* Sections & Layout */
       .section {
@@ -155,17 +182,25 @@ section[id] {
       }
 
       .section h2 {
-        margin: 0 0 0.75rem;
-        font-size: 1.9rem;
-        letter-spacing: 0.03em;
-      }
+  margin: 0 0 0.75rem;
+
+  /* ✅ ca. 75 % der Hero-Brand-Größe */
+  font-size: clamp(1.5rem, 3.3vw, 2.4rem);
+
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
 
       .section-text {
-        margin: 0 0 1.8rem;
-        font-size: 1rem;
-        line-height: 1.7;
-        color: var(--text-muted);
-      }
+  font-size: 1.05rem;
+  color: var(--text-main);   /* ✅ nicht mehr grau */
+  line-height: 1.8;
+  max-width: 720px;
+  margin-top: 0.8rem;
+}
+
 
       .card {
         background: var(--bg-surface);
