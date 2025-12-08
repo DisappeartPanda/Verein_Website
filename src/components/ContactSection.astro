@@ -1,0 +1,235 @@
+<section id="kontakt" class="section section-contact">
+  <div class="section-inner section-inner-narrow">
+
+    <!-- HEADLINE + ICONS UNTEREINANDER -->
+    <div class="contact-header">
+      <h2 class="contact-title">Kontakt</h2>
+
+    <!-- ZENTRIERTES FORMULAR -->
+    <form id="contact-form" class="contact-form">
+      <div class="form-field">
+        <label for="name">Name</label>
+        <input id="name" name="name" type="text" required />
+      </div>
+
+      <div class="form-field">
+        <label for="email">E-Mail</label>
+        <input id="email" name="email" type="email" required />
+      </div>
+
+      <div class="form-field">
+        <label for="message">Nachricht</label>
+        <textarea id="message" name="message" rows="4" required></textarea>
+      </div>
+
+      <button type="submit" class="btn btn-primary">
+        Nachricht senden
+      </button>
+
+      <p id="contact-status" class="contact-status"></p>
+    </form>
+
+   <!-- E-MAIL INFO -->
+<p class="contact-mail">
+  Oder direkt per Mail:
+  <a href="mailto:levelup.culture.ev@gmail.com">
+    levelup.culture.ev@gmail.com
+  </a>
+</p>
+
+<!-- ICONS GANZ UNTEN -->
+<div class="contact-icons contact-icons-bottom">
+  <a
+    href="https://www.instagram.com/levelupculture"
+    target="_blank"
+    rel="noreferrer"
+    aria-label="Instagram"
+  >
+    <i class="fa-brands fa-instagram"></i>
+  </a>
+
+  <a
+    href="https://discord.gg/DEIN_INVITE"
+    target="_blank"
+    rel="noreferrer"
+    aria-label="Discord"
+  >
+    <i class="fa-brands fa-discord"></i>
+  </a>
+
+  <a
+    href="mailto:
+    target="_blank"
+    rel="noreferrer"
+    aria-label="Youtube">
+  <i class="fa-brands fa-youtube"></i>
+
+</a>
+</div>
+
+<script>
+  if (typeof window !== "undefined") {
+    const form = document.getElementById("contact-form");
+    const statusEl = document.getElementById("contact-status");
+
+    const SCRIPT_URL =
+      "https://script.google.com/macros/s/AKfycbwzCp1csHRbo3Wcl2N9T4mnjBtOPhuQznP-t9gzwEL-mYvT5xcLinJ-dvNltmeSjuWl9w/exec"; // 🔥 Hier deine Script-URL einfügen
+
+    form?.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      if (!form) return;
+
+      statusEl.textContent = "Sende Nachricht…";
+
+      try {
+        const formData = new FormData(form);
+
+        await fetch(SCRIPT_URL, {
+          method: "POST",
+          body: formData, // 🔥 kein Content-Type, kein JSON → kein CORS-Preflight
+        });
+
+        form.reset();
+        statusEl.textContent = "✅ Nachricht erfolgreich gesendet!";
+      } catch (err) {
+        console.error("Kontaktfehler:", err);
+        statusEl.textContent =
+          "❌ Deine Nachricht konnte nicht gesendet werden. Bitte probier es später noch einmal.";
+      }
+    });
+  }
+</script>
+
+
+ 
+</section>
+
+<style>
+.section-contact {
+  padding-top: 3rem;
+  text-align: center;
+}
+
+/* HEADER GANZ OBEN & MITTIG */
+.contact-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.contact-title {
+  font-size: clamp(2rem, 2.6vw, 2.4rem);
+  line-height: 1.1;
+  font-weight: 700;
+  color: var(--text-main);
+  margin: 0;
+}
+
+.contact-icons {
+  display: flex;
+  gap: 0.9rem;
+  font-size: 1.8rem;
+}
+
+.contact-icons a {
+  color: var(--text-main);
+  transition: transform 0.15s ease, color 0.15s ease;
+}
+
+.contact-icons a:hover {
+  transform: translateY(-2px);
+  color: var(--accent);
+}
+
+/* FORMULAR */
+.contact-form {
+  margin: 0 auto;
+  width: 100%;
+  max-width: 720px;   /* 👈 deutlich breiter */
+  background: #ffffff;
+  border-radius: 1.5rem;
+  padding: 2rem 2.2rem;   /* etwas mehr Innenabstand passt optisch besser */
+  border: 1px solid var(--border-soft);
+  box-shadow: 0 12px 32px rgba(15, 23, 42, 0.08);
+  display: grid;
+  gap: 1.2rem;
+}
+
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+.form-field label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--text-muted);
+  margin-bottom: 0.2rem;
+}
+
+.form-field input,
+.form-field textarea {
+  padding: 0.6rem 0.7rem;
+  border-radius: 0.6rem;
+  border: 1px solid var(--border-soft);
+  font-size: 0.95rem;
+}
+
+.contact-status {
+  font-size: 0.9rem;
+  min-height: 1.2rem;
+  text-align: center;
+}
+
+/* MAIL UNTEN */
+.contact-mail {
+  margin-top: 1.2rem;
+  font-size: 0.95rem;
+}
+
+.contact-mail a {
+  color: var(--accent);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+/* MAIL UNTER DEM FORMULAR */
+.contact-mail {
+  margin-top: 1.4rem;
+  font-size: 0.95rem;
+  text-align: center;
+}
+
+.contact-mail a {
+  color: var(--accent);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+/* ICONS GANZ UNTEN */
+.contact-icons-bottom {
+  margin-top: 0.9rem;
+  display: flex;
+  justify-content: center;
+  gap: 1.2rem;
+  font-size: 1.9rem;
+}
+
+.contact-icons-bottom a {
+  color: var(--text-main);
+  transition: transform 0.15s ease, color 0.15s ease;
+}
+
+.contact-icons-bottom a:hover {
+  transform: translateY(-2px);
+  color: var(--accent);
+}
+
+</style>

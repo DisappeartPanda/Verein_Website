@@ -1,0 +1,659 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+const PAGE_TITLE = "Mitgliedsantrag";
+const SCRIPT_URL = import.meta.env.PUBLIC_MEMBER_FORM_ENDPOINT;
+---
+
+<BaseLayout title={`${PAGE_TITLE} – Level Up Culture e.V.`}>
+  <main class="page">
+    <!-- HERO -->
+    <section class="hero">
+      <div class="hero__content">
+        <p class="hero__eyebrow">Level Up Culture e.V.</p>
+        <h1 class="hero__title">Mitglied werden</h1>
+        <p class="hero__subtitle">
+          Werde Teil unserer Community und unterstütze Projekte rund um
+          digitale Bildung, Gaming-Kultur, Jugendhilfe und mehr.
+        </p>
+
+        <div class="hero__highlights">
+          <div class="pill">Gemeinschaft &amp; Events</div>
+          <div class="pill">Workshops &amp; Bildung</div>
+          <div class="pill">Jugendförderung</div>
+        </div>
+      </div>
+
+      <aside class="hero__card">
+        <h2 class="card__title">Warum Mitglied werden?</h2>
+        <ul class="card__list">
+          <li>Mitgestaltung von Projekten &amp; Events</li>
+          <li>Priorisierter Zugang zu Workshops &amp; Angeboten</li>
+          <li>Unterstützung von junger, digitaler Bildungskultur</li>
+          <li>Vernetzung mit engagierten Menschen &amp; Teams</li>
+        </ul>
+        <p class="card__hint">
+          Du kannst als reguläres Mitglied, jugendliches Mitglied
+          oder Fördermitglied beitreten.
+        </p>
+      </aside>
+    </section>
+
+    <!-- STEPS -->
+    <section class="steps">
+      <h2 class="steps__title">So läuft dein Mitgliedsantrag ab</h2>
+      <div class="steps__grid">
+        <div class="step-card">
+          <div class="step-card__number">1</div>
+          <h3 class="step-card__title">Formular ausfüllen</h3>
+          <p class="step-card__text">
+            Fülle den Antrag weiter unten mit deinen Daten aus.
+          </p>
+        </div>
+        <div class="step-card">
+          <div class="step-card__number">2</div>
+          <h3 class="step-card__title">Bestätigung durch den Verein</h3>
+          <p class="step-card__text">
+            Wir prüfen deinen Antrag und melden uns per E-Mail bei dir.
+          </p>
+        </div>
+        <div class="step-card">
+          <div class="step-card__number">3</div>
+          <h3 class="step-card__title">Willkommen bei Level Up Culture</h3>
+          <p class="step-card__text">
+            Nach Bestätigung erhältst du alle Infos zu Beiträgen,
+            Angeboten und Beteiligungsmöglichkeiten.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- FORM -->
+    <section class="form-section" id="mitgliedsantrag">
+      <div class="form-section__header">
+        <h2>Mitgliedsantrag</h2>
+        <p>
+          Bitte fülle alle Pflichtfelder aus. Deine Daten werden ausschließlich
+          für die Vereinsverwaltung und Kommunikation verwendet.
+        </p>
+      </div>
+
+      <div class="form-card">
+        <!-- WICHTIG: SCRIPT_URL wird hier über data-endpoint bereitgestellt -->
+        <form
+          id="membership-form"
+          data-endpoint={SCRIPT_URL}
+        >
+          <!-- Persönliche Daten -->
+          <div class="form__group form__group--grid">
+            <div class="field">
+              <label for="first_name">Vorname *</label>
+              <input
+                id="first_name"
+                name="first_name"
+                type="text"
+                required
+                autocomplete="given-name"
+              />
+            </div>
+            <div class="field">
+              <label for="last_name">Nachname *</label>
+              <input
+                id="last_name"
+                name="last_name"
+                type="text"
+                required
+                autocomplete="family-name"
+              />
+            </div>
+          </div>
+
+          <div class="form__group form__group--grid">
+            <div class="field">
+              <label for="birthdate">Geburtsdatum *</label>
+              <input
+                id="birthdate"
+                name="birthdate"
+                type="date"
+                required
+              />
+            </div>
+            <div class="field">
+              <label for="phone">Telefon (optional)</label>
+              <input
+                id="phone"
+                name="phone"
+                type="tel"
+                autocomplete="tel"
+                placeholder="+49 ..."
+              />
+            </div>
+          </div>
+
+          <!-- Adresse -->
+          <div class="form__group">
+            <h3 class="group-title">Adresse</h3>
+            <div class="field">
+              <label for="street">Straße &amp; Hausnummer *</label>
+              <input
+                id="street"
+                name="street"
+                type="text"
+                required
+                autocomplete="address-line1"
+              />
+            </div>
+            <div class="form__group--grid">
+              <div class="field">
+                <label for="zip">PLZ *</label>
+                <input
+                  id="zip"
+                  name="zip"
+                  type="text"
+                  required
+                  autocomplete="postal-code"
+                />
+              </div>
+              <div class="field">
+                <label for="city">Ort *</label>
+                <input
+                  id="city"
+                  name="city"
+                  type="text"
+                  required
+                  autocomplete="address-level2"
+                />
+              </div>
+            </div>
+          </div>
+
+          <!-- Kontakt -->
+          <div class="form__group">
+            <h3 class="group-title">Kontakt</h3>
+            <div class="field">
+              <label for="email">E-Mail *</label>
+              <input
+                id="email"
+                name="email"
+                type="email"
+                required
+                autocomplete="email"
+              />
+            </div>
+          </div>
+
+          <!-- Mitgliedschaft -->
+          <div class="form__group">
+            <h3 class="group-title">Mitgliedschaft</h3>
+            <div class="field">
+              <label for="membership_type">Art der Mitgliedschaft *</label>
+              <select id="membership_type" name="membership_type" required>
+                <option value="">Bitte auswählen</option>
+                <option value="jugendlich">
+                  Jugendmitglied (unter 27 Jahren)
+                </option>
+                <option value="regulaer">
+                  Reguläres Mitglied
+                </option>
+                <option value="foerder">
+                  Fördermitglied
+                </option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="interests">Interessen / Bereiche (optional)</label>
+              <textarea
+                id="interests"
+                name="interests"
+                rows="3"
+                placeholder="z. B. Workshops, eSport, Medienpädagogik, Projekte ..."
+              ></textarea>
+            </div>
+          </div>
+
+          <!-- Hinweise -->
+          <div class="form__group">
+            <h3 class="group-title">Hinweise &amp; Kommentare (optional)</h3>
+            <div class="field">
+              <label for="notes">Nachricht an den Verein</label>
+              <textarea
+                id="notes"
+                name="notes"
+                rows="4"
+                placeholder="Alles, was wir zusätzlich wissen sollten."
+              ></textarea>
+            </div>
+          </div>
+
+          <!-- Zustimmung -->
+          <div class="form__group form__group--stack">
+            <label class="checkbox">
+              <input
+                type="checkbox"
+                name="accept_statutes"
+                required
+              />
+              <span>
+                Ich bestätige, dass ich die Satzung des Vereins zur Kenntnis
+                genommen habe und diese akzeptiere. *
+              </span>
+            </label>
+            <label class="checkbox">
+              <input
+                type="checkbox"
+                name="accept_privacy"
+                required
+              />
+              <span>
+                Ich stimme der Verarbeitung meiner Daten gemäß der
+                Datenschutzerklärung zu. *
+              </span>
+            </label>
+          </div>
+
+          <!-- Status & Submit -->
+          <div class="form__footer">
+            <p id="form-status" class="form__status" aria-live="polite"></p>
+            <button
+              type="submit"
+              class="btn-primary"
+            >
+              Mitgliedsantrag absenden
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <div class="form-section__info">
+        <p>
+          Deine Angaben werden verschlüsselt übertragen und sicher gespeichert.
+          Bei Fragen kannst du uns jederzeit über das Kontaktformular oder
+          per E-Mail erreichen.
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <!-- INLINE SCRIPT: POST zu Google Apps Script + Reset + Status -->
+ <script is:inline>
+  if (typeof window !== "undefined") {
+    const form = document.getElementById("membership-form");
+    const statusEl = document.getElementById("form-status");
+
+    // 👇 HIER DEINE APPS-SCRIPT-URL DIREKT EINTRAGEN
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzs_IVtZ1Q3-98FkQcpsQglQw2ZkMEJ_q1pIU460jlQDKii7iKx3LbsOhHC1jMKh2du/exec";
+
+    console.log("Form:", form);
+    console.log("SCRIPT_URL:", SCRIPT_URL);
+
+    form?.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      if (!form || !SCRIPT_URL) {
+        console.error("Form oder SCRIPT_URL fehlt");
+        if (statusEl) {
+          statusEl.textContent =
+            "❌ Der Antrag konnte nicht gesendet werden (Konfiguration fehlt). Bitte melde dich direkt per Mail.";
+          statusEl.classList.add("form__status--error");
+        }
+        return;
+      }
+
+      if (statusEl) {
+        statusEl.textContent = "Sende deinen Antrag…";
+        statusEl.classList.remove("form__status--success", "form__status--error");
+      }
+
+      try {
+        const formData = new FormData(form);
+
+        await fetch(SCRIPT_URL, {
+          method: "POST",
+           mode: "no-cors",   
+          body: formData,
+        });
+
+        form.reset();
+
+        if (statusEl) {
+          statusEl.textContent =
+            "✅ Vielen Dank! Dein Mitgliedsantrag ist bei uns eingegangen.";
+          statusEl.classList.add("form__status--success");
+        }
+      } catch (err) {
+        console.error("Mitgliedsantrag-Fehler:", err);
+        if (statusEl) {
+          statusEl.textContent =
+            "❌ Dein Antrag konnte nicht gesendet werden. Bitte probiere es später erneut oder melde dich direkt per Mail.";
+          statusEl.classList.add("form__status--error");
+        }
+      }
+    });
+  }
+</script>
+
+</BaseLayout>
+
+<style>
+  .page {
+    min-height: 100vh;
+    background: var(--bg-page);
+    padding: 6rem 1.5rem 4rem;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .hero {
+    display: grid;
+    grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+    gap: 2.5rem;
+    align-items: center;
+    margin-bottom: 4rem;
+  }
+
+  @media (max-width: 800px) {
+    .hero {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+
+  .hero__content {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .hero__eyebrow {
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+  }
+
+  .hero__title {
+    font-size: clamp(2rem, 3vw, 2.6rem);
+    color: var(--text-main);
+    line-height: 1.1;
+  }
+
+  .hero__subtitle {
+    max-width: 34rem;
+    color: var(--text-muted);
+    font-size: 0.98rem;
+  }
+
+  .hero__highlights {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-top: 0.5rem;
+  }
+
+  .pill {
+    padding: 0.35rem 0.85rem;
+    border-radius: 999px;
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-size: 0.8rem;
+    font-weight: 500;
+  }
+
+  .hero__card {
+    background: var(--bg-surface);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-soft);
+    padding: 1.75rem 1.75rem 1.5rem;
+    border: 1px solid var(--border-soft);
+  }
+
+  .card__title {
+    font-size: 1.1rem;
+    margin-bottom: 0.85rem;
+    color: var(--text-main);
+  }
+
+  .card__list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 0.9rem;
+  }
+
+  .card__list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.4rem;
+    padding: 0.25rem 0;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+  }
+
+  .card__list li::before {
+    content: "•";
+    color: var(--accent);
+    margin-top: 0.15rem;
+    font-size: 0.9rem;
+  }
+
+  .card__hint {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+  }
+
+  .steps {
+    margin-bottom: 3.5rem;
+  }
+
+  .steps__title {
+    font-size: 1.2rem;
+    margin-bottom: 1.5rem;
+    color: var(--text-main);
+  }
+
+  .steps__grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.5rem;
+  }
+
+  @media (max-width: 900px) {
+    .steps__grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+
+  .step-card {
+    background: var(--bg-surface);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border-soft);
+    padding: 1.25rem 1.25rem 1.1rem;
+  }
+
+  .step-card__number {
+    width: 1.8rem;
+    height: 1.8rem;
+    border-radius: 999px;
+    background: var(--accent-soft);
+    color: var(--accent);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 0.45rem;
+  }
+
+  .step-card__title {
+    font-size: 1rem;
+    margin-bottom: 0.3rem;
+    color: var(--text-main);
+  }
+
+  .step-card__text {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+  }
+
+  .form-section {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .form-section__header h2 {
+    font-size: 1.4rem;
+    margin-bottom: 0.4rem;
+    color: var(--text-main);
+  }
+
+  .form-section__header p {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    max-width: 40rem;
+  }
+
+  .form-card {
+    background: var(--bg-surface);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-soft);
+    padding: 1.8rem 1.8rem 1.6rem;
+    border: 1px solid var(--border-soft);
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.4rem;
+  }
+
+  .form__group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .form__group--grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+  }
+
+  @media (max-width: 700px) {
+    .form__group--grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+
+  .form__group--stack {
+    gap: 0.6rem;
+  }
+
+  .group-title {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text-main);
+  }
+
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+
+  label {
+    font-size: 0.85rem;
+    color: var(--text-main);
+    font-weight: 500;
+  }
+
+  input,
+  select,
+  textarea {
+    border-radius: 0.7rem;
+    border: 1px solid var(--border-soft);
+    padding: 0.55rem 0.75rem;
+    font-size: 0.9rem;
+    font-family: inherit;
+    color: var(--text-main);
+    background: #fff;
+  }
+
+  input:focus,
+  select:focus,
+  textarea:focus {
+    outline: 2px solid var(--accent-soft);
+    border-color: var(--accent);
+  }
+
+  textarea {
+    resize: vertical;
+    min-height: 120px;
+  }
+
+  .checkbox {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+  }
+
+  .checkbox input {
+    margin-top: 0.15rem;
+    width: 1rem;
+    height: 1rem;
+  }
+
+  .form__footer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 0.5rem;
+  }
+
+  .form__status {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    min-height: 1.2em;
+  }
+
+  .form__status--success {
+    color: #118a4e;
+  }
+
+  .form__status--error {
+    color: #b3261e;
+  }
+
+  .btn-primary {
+    border: none;
+    border-radius: 999px;
+    padding: 0.65rem 1.4rem;
+    background: var(--accent);
+    color: #fff;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 12px 30px rgba(31, 111, 156, 0.35);
+    transition: transform 0.08s ease, box-shadow 0.08s ease,
+      background 0.12s ease;
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 16px 36px rgba(31, 111, 156, 0.4);
+    background: var(--brand-main);
+  }
+
+  .btn-primary:active {
+    transform: translateY(0);
+    box-shadow: 0 8px 20px rgba(31, 111, 156, 0.25);
+  }
+
+  .form-section__info {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    max-width: 40rem;
+  }
+</style>

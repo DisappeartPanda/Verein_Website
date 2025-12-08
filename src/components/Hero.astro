@@ -1,5 +1,14 @@
 ---
+
+import { getGoogleEvents } from "../lib/googleCalendar";
+
+// …dein bisheriger Code hier…
+
+const rawEvents = await getGoogleEvents();
+const events = Array.isArray(rawEvents) ? rawEvents : [];
+const nextEvent = events[0] ?? null;
 ---
+
 
 <header class="hero">
   <div class="hero-inner">
@@ -16,47 +25,110 @@
       
 
         <div class="hero-actions">
-          <a href="#mitgliedschaft" class="btn btn-primary">
+          <a href="/mitgliedsantrag" class="btn btn-primary">
             Mitglied werden
           </a>
-          <a href="#events" class="btn btn-secondary">Nächste Events ansehen</a>
+          <a href="/events" class="btn btn-secondary">Nächste Events ansehen</a>
         </div>
       </div>
 
       <!-- "Produkt"-Card rechts (Mockup wie bei Perspective) -->
       <div class="hero-visual">
-        <div class="hero-device-shadow" aria-hidden="true"></div>
-        <div class="hero-device">
-          <div class="hero-device-header">
-            <span class="hero-device-pill">Nächstes Event</span>
-            <span class="hero-device-status">Plätze verfügbar</span>
-          </div>
+  <div class="hero-device-shadow" aria-hidden="true"></div>
+  <div class="hero-device">
+    <div class="hero-device-header">
+      <span class="hero-device-pill">Nächstes Event</span>
+     <span class="hero-device-status">
+  <span id="participant-count">0</span> Interessent:innen
+</span>
 
-          <div class="hero-device-body">
-            <div class="hero-device-event">
-              <h2>Open Community Night</h2>
-              <p>Jeden Freitag · 18:00 – 22:00 Uhr</p>
-              <ul>
-                <li>Gaming-Stationen &amp; kleine Turniere</li>
-                <li>Kreativ-Ecke für eigene Projekte</li>
-                <li>Raum zum Ankommen &amp; Chillen</li>
-              </ul>
-            </div>
+    </div>
 
-            <div class="hero-device-card">
-              <div>
-                <span class="hero-device-label">Teilnehmende letzte Woche</span>
-                <strong>27</strong>
-              </div>
-              <div class="hero-device-chip">Jugendzentrum</div>
-            </div>
+    <div class="hero-device-body">
+      <div class="hero-device-event">
+        <h2>
+          {nextEvent ? nextEvent.summary : "Open Community Night"}
+        </h2>
 
-            <button class="btn btn-primary hero-device-cta">
-              Ich möchte teilnehmen
-            </button>
-          </div>
+        <p>
+          {
+            (() => {
+              if (!nextEvent) {
+                // dein bisheriger Text als Fallback
+                return "Jeden Freitag · 18:00 – 22:00 Uhr";
+              }
+
+              const start = nextEvent.start || {};
+              const end = nextEvent.end || {};
+              const startVal = start.dateTime || start.date || null;
+              const endVal = end.dateTime || end.date || null;
+
+              if (!startVal) {
+                return "Termin wird noch bekannt gegeben";
+              }
+
+              const startDate = new Date(startVal);
+              let text = startDate.toLocaleDateString("de-DE", {
+                weekday: "short",
+                day: "2-digit",
+                month: "2-digit",
+              });
+
+              if (start.dateTime) {
+                const startTime = startDate.toLocaleTimeString("de-DE", {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                });
+                text += ` · ${startTime}`;
+
+                if (endVal) {
+                  const endDate = new Date(endVal);
+                  const endTime = endDate.toLocaleTimeString("de-DE", {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  });
+                  text += ` – ${endTime}`;
+                }
+              }
+
+              return text;
+            })()
+          }
+        </p>
+
+        <ul>
+  
+    {nextEvent?.description && (
+  <ul>
+    {
+      nextEvent.description
+        .split("\n")        // jede Zeile ein Bullet
+        .filter(Boolean)   // leere Zeilen entfernen
+        .slice(0, 5)       // optional: max. 5 Punkte
+        .map((line) => <li>{line}</li>)
+    }
+  </ul>
+)}
+
+
+      <div class="hero-device-card">
+        <div class="hero-device-chip">
+          {nextEvent?.location ?? ""}
         </div>
       </div>
+
+     <button
+  id="participate-btn"
+  class="btn btn-primary hero-device-cta"
+  type="button"
+>
+  Ich möchte teilnehmen
+</button>
+
+    </div>
+  </div>
+</div>
+
     </div>
   </div>
 </header>
@@ -77,6 +149,44 @@
     window.addEventListener("scroll", onScroll);
     onScroll();
   }
+
+  if (typeof window !== "undefined") {
+    const COUNT_KEY = "hero_participant_count";
+    const CLICKED_KEY = "hero_has_clicked";
+
+    const countEl = document.getElementById("participant-count");
+    const btn = document.getElementById("participate-btn");
+
+    let count = Number(localStorage.getItem(COUNT_KEY) || 0);
+    const hasClicked = localStorage.getItem(CLICKED_KEY) === "true";
+
+    // Initial anzeigen
+    countEl.textContent = count;
+
+    if (hasClicked) {
+      btn.disabled = true;
+      btn.textContent = "Teilnahme gespeichert";
+      btn.style.opacity = "0.6";
+      btn.style.cursor = "not-allowed";
+    }
+
+    btn.addEventListener("click", () => {
+      if (localStorage.getItem(CLICKED_KEY) === "true") return;
+
+      count += 1;
+      localStorage.setItem(COUNT_KEY, count);
+      localStorage.setItem(CLICKED_KEY, "true");
+
+      countEl.textContent = count;
+
+      btn.disabled = true;
+      btn.textContent = "Teilnahme gespeichert";
+      btn.style.opacity = "0.6";
+      btn.style.cursor = "not-allowed";
+    });
+  }
+
+
 </script>
 
 <style>
@@ -318,6 +428,7 @@
     background: #ffffff;
     box-shadow: 0 26px 70px rgba(15, 23, 42, 0.22);
     border: 1px solid rgba(148, 163, 184, 0.4);
+  
   }
 
   .hero-device-header {
@@ -468,6 +579,29 @@
   line-height: 1.1;
 }
 
+.hero-device {
+  display: flex;
+  flex-direction: column;
+}
+
+.hero-device-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.hero-device-event {
+  flex: 1;
+  overflow: hidden;
+}
+
+.hero-device-event ul {
+  overflow-y: auto;        /* Scroll nur in der Liste */
+  padding-right: 0.4rem;
+}
+
+
 
 
 </style>
+

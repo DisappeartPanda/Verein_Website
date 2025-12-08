@@ -1,0 +1,96 @@
+---
+import { getGoogleEvents } from "../lib/googleCalendar";
+
+const rawEvents = await getGoogleEvents();
+
+// defensiv: immer ein Array sicherstellen
+const events = Array.isArray(rawEvents) ? rawEvents : [];
+---
+
+<section class="events-google">
+  <h2>Nächste Events</h2>
+
+  {events.length === 0 ? (
+    <p class="section-text">
+      Aktuell sind keine Termine im Kalender eingetragen.
+      Schau später nochmal vorbei oder folge uns auf unseren Kanälen.
+    </p>
+  ) : (
+    <div class="events-grid">
+      {events.map((ev) => {
+        const start = ev.start || {};
+        const dateValue = start.dateTime || start.date || null;
+        const date = dateValue ? new Date(dateValue) : null;
+
+        return (
+          <article class="event-card">
+            <h3>{ev.summary}</h3>
+
+            {date && (
+              <time class="event-date">
+                {date.toLocaleDateString("de-DE", {
+                  weekday: "short",
+                  day: "2-digit",
+                  month: "2-digit",
+                  year: "numeric",
+                })}
+              </time>
+            )}
+
+            {ev.location && (
+              <p class="event-location">
+                {ev.location}
+              </p>
+            )}
+
+            {ev.description && (
+              <p class="event-description">
+                {ev.description}</p>
+            )}
+          </article>
+        );
+      })}
+    </div>
+  )}
+</section>
+
+<style>
+  .events-grid {
+    display: grid;
+    gap: 2rem;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  }
+
+  .event-card {
+    background: #ffffff;
+    padding: 1.8rem;
+    border-radius: 1.5rem;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08);
+    border: 1px solid var(--border-soft);
+  }
+
+  .event-card h3 {
+    font-size: 1.25rem;
+    margin-bottom: 0.4rem;
+  }
+
+  .event-date {
+    display: inline-block;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--accent);
+    margin-bottom: 0.35rem;
+  }
+
+  .event-location {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    margin-bottom: 0.35rem;
+  }
+
+  .event-description {
+    font-size: 0.9rem;
+    color: var(--text-main);
+    margin: 0.4rem 0 0;
+  }
+</style>

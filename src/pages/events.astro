@@ -1,0 +1,221 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout title="Events – Level Up Culture e.V.">
+  <main class="page page-events">
+    {/* Hero / Intro */}
+    <section class="section events-hero">
+      <div class="section-inner section-inner-narrow">
+        <p class="eyebrow">Events &amp; Termine</p>
+        <h1 class="events-title">Nächste Events &amp; Community-Termine</h1>
+        <p class="events-lead">
+          Hier findest du eine Übersicht über unsere kommenden Events, Gaming-Abende,
+          Workshops und Projekte. Schau regelmäßig vorbei – der Kalender wird laufend aktualisiert.
+        </p>
+
+        <div class="events-tags">
+          <span>Community Nights</span>
+          <span>Workshops</span>
+          <span>eSport &amp; Turniere</span>
+          <span>Projekte &amp; Specials</span>
+        </div>
+      </div>
+    </section>
+
+    {/* Kalender eingebettet in Card */}
+    <section class="section">
+      <div class="section-inner">
+        <div class="calendar-card">
+          <div class="calendar-header">
+            <h2>Event-Kalender</h2>
+            <p>
+              Alle Termine im Überblick. Du kannst den Kalender auch in deinen eigenen
+              Google-Kalender übernehmen, um nichts zu verpassen.
+            </p>
+          </div>
+
+          <div class="calendar-embed">
+            <iframe
+              src="https://calendar.google.com/calendar/embed?src=levelup.culture.ev%40gmail.com&ctz=Europe%2FBerlin"
+              loading="lazy"
+              title="Level Up Culture Event-Kalender"
+            ></iframe>
+          </div>
+
+          <p class="calendar-hint">
+            Tipp: Klicke auf einen Termin im Kalender, um Details zu Uhrzeit, Ort und Beschreibung zu sehen.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    {/* Optional: Platzhalter für Highlights (kannst du später füllen) */}
+    <section class="section section-soft">
+      <div class="section-inner section-inner-narrow">
+        <h2 class="section-title">Was dich bei unseren Events erwartet</h2>
+        <p class="section-text">
+          Ob offene Gaming-Abende, kreative Workshops oder eSport-Formate – bei unseren Events
+          geht es immer um Gemeinschaft, Fair Play und das gemeinsame Leveln von Skills.
+        </p>
+
+        <div class="events-grid">
+          <article class="event-highlight-card">
+            <h3>🎮 Open Community Nights</h3>
+            <p>
+              Regelmäßige Treffen mit Gaming-Stationen, kreativen Ecken und Raum zum Ankommen,
+              Ausprobieren und neue Leute kennenlernen.
+            </p>
+          </article>
+
+          <article class="event-highlight-card">
+            <h3>🧠 Workshops &amp; Sessions</h3>
+            <p>
+              Von IT-Grundlagen über Medienkompetenz bis zu KI &amp; digitalen Tools – praxisnah,
+              alltagsrelevant und gemeinsam mit der Community gestaltet.
+            </p>
+          </article>
+
+          <article class="event-highlight-card">
+            <h3>🤝 Projekte &amp; Kooperationen</h3>
+            <p>
+              Spezielle Formate mit Schulen, Jugendzentren, Vereinen und Partnern – mit Fokus auf
+              Teilhabe, Empowerment und moderner Jugendkultur.
+            </p>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+</BaseLayout>
+
+<style>
+  .page-events {
+    padding-bottom: 4rem;
+  }
+
+  .events-hero {
+    padding-top: 3.5rem;
+    padding-bottom: 2rem;
+  }
+
+  .eyebrow {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.22em;
+    color: var(--text-muted);
+    margin-bottom: 0.6rem;
+  }
+
+  .events-title {
+    font-size: clamp(2.1rem, 3vw, 2.7rem);
+    line-height: 1.1;
+    font-weight: 800;
+    color: var(--text-main);
+    margin-bottom: 0.7rem;
+  }
+
+  .events-lead {
+    font-size: 1.02rem;
+    max-width: 40rem;
+    color: var(--text-main);
+    margin-bottom: 1.3rem;
+  }
+
+  .events-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .events-tags span {
+    font-size: 0.8rem;
+    padding: 0.35rem 0.75rem;
+    border-radius: 999px;
+    border: 1px solid var(--border-soft);
+    background: rgba(255, 255, 255, 0.9);
+  }
+
+  .calendar-card {
+    padding: 1.8rem 1.6rem 1.6rem;
+    border-radius: 1.5rem;
+    background: #ffffff;
+    border: 1px solid var(--border-soft);
+    box-shadow: var(--shadow-soft);
+  }
+
+  .calendar-header h2 {
+    font-size: 1.4rem;
+    margin-bottom: 0.4rem;
+  }
+
+  .calendar-header p {
+    font-size: 0.96rem;
+    color: var(--text-muted);
+    max-width: 36rem;
+  }
+
+  .calendar-embed {
+    margin-top: 1.4rem;
+    border-radius: 1.2rem;
+    overflow: hidden;
+    border: 1px solid var(--border-soft);
+    background: var(--bg-soft);
+  }
+
+  .calendar-embed iframe {
+    display: block;
+    width: 100%;
+    height: 600px;
+    border: 0;
+  }
+
+  .calendar-hint {
+    margin-top: 0.9rem;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+  }
+
+  .section-soft {
+    background: radial-gradient(circle at top left, rgba(148, 163, 255, 0.08), transparent 55%);
+  }
+
+  .events-grid {
+    display: grid;
+    gap: 1.4rem;
+    margin-top: 1.4rem;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  }
+
+  .event-highlight-card {
+    padding: 1.4rem 1.3rem;
+    border-radius: 1.3rem;
+    background: #ffffff;
+    border: 1px solid var(--border-soft);
+    box-shadow: 0 10px 28px rgba(15, 23, 42, 0.06);
+  }
+
+  .event-highlight-card h3 {
+    font-size: 1.05rem;
+    margin-bottom: 0.4rem;
+  }
+
+  .event-highlight-card p {
+    font-size: 0.94rem;
+    color: var(--text-main);
+  }
+
+  @media (max-width: 720px) {
+    .events-hero {
+      padding-top: 3rem;
+    }
+
+    .calendar-card {
+      padding: 1.5rem 1.3rem 1.4rem;
+    }
+
+    .calendar-embed iframe {
+      height: 480px;
+    }
+  }
+</style>
