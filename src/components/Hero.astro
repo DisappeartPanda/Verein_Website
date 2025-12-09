@@ -2,11 +2,25 @@
 
 import { getGoogleEvents } from "../lib/googleCalendar";
 
-// …dein bisheriger Code hier…
-
 const rawEvents = await getGoogleEvents();
-const events = Array.isArray(rawEvents) ? rawEvents : [];
+const now = new Date();
+
+// Nur echte Events, nur mit Start-Datum, in der Zukunft, nach Startdatum sortiert
+const events = (Array.isArray(rawEvents) ? rawEvents : [])
+  .filter((event) => {
+    const startVal = event?.start?.dateTime || event?.start?.date;
+    if (!startVal) return false;
+    const startDate = new Date(startVal);
+    return startDate >= now;
+  })
+  .sort((a, b) => {
+    const aStart = new Date(a.start.dateTime || a.start.date);
+    const bStart = new Date(b.start.dateTime || b.start.date);
+    return aStart.getTime() - bStart.getTime();
+  });
+
 const nextEvent = events[0] ?? null;
+
 ---
 
 
