@@ -1,27 +1,40 @@
 ---
-
 import { getGoogleEvents } from "../lib/googleCalendar";
 
-const rawEvents = await getGoogleEvents();
-const now = new Date();
+let nextEvent = null;
 
-// Nur echte Events, nur mit Start-Datum, in der Zukunft, nach Startdatum sortiert
-const events = (Array.isArray(rawEvents) ? rawEvents : [])
-  .filter((event) => {
-    const startVal = event?.start?.dateTime || event?.start?.date;
-    if (!startVal) return false;
-    const startDate = new Date(startVal);
-    return startDate >= now;
-  })
-  .sort((a, b) => {
-    const aStart = new Date(a.start.dateTime || a.start.date);
-    const bStart = new Date(b.start.dateTime || b.start.date);
-    return aStart.getTime() - bStart.getTime();
-  });
+try {
+  const rawEvents = await getGoogleEvents();
+  const now = new Date();
 
-const nextEvent = events[0] ?? null;
+  const events = (Array.isArray(rawEvents) ? rawEvents : [])
+    // nur Events mit Start-Datum
+    .map((event) => {
+      const startVal =
+        event?.start?.dateTime ||
+        event?.start?.date ||
+        null;
 
+      if (!startVal) return null;
+
+      return {
+        ...event,
+        _startDate: new Date(startVal),
+      };
+    })
+    .filter((event) => {
+      if (!event?._startDate || isNaN(event._startDate)) return false;
+      return event._startDate >= now;
+    })
+    .sort((a, b) => a._startDate.getTime() - b._startDate.getTime());
+
+  nextEvent = events[0] ?? null;
+} catch (err) {
+  console.error("Fehler beim Laden der Events:", err);
+  nextEvent = null;
+}
 ---
+
 
 
 <header class="hero">
@@ -114,15 +127,16 @@ const nextEvent = events[0] ?? null;
   
     {nextEvent?.description && (
   <ul>
-    {
-      nextEvent.description
-        .split("\n")        // jede Zeile ein Bullet
-        .filter(Boolean)   // leere Zeilen entfernen
-        .slice(0, 5)       // optional: max. 5 Punkte
-        .map((line) => <li>{line}</li>)
-    }
+    {nextEvent.description
+      .split("\n")
+      .filter(Boolean)
+      .slice(0, 5)
+      .map((line, i) => (
+        <li key={i}>{line}</li>
+      ))}
   </ul>
 )}
+
 
 
       <div class="hero-device-card">
