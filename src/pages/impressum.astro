@@ -1,0 +1,204 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+const PAGE_TITLE = "Impressum";
+---
+
+<BaseLayout title={`${PAGE_TITLE} – Level Up Culture e.V.`}>
+  <main class="page-legal">
+    <section class="legal-card">
+      <header class="legal-header">
+        <p class="legal-eyebrow">Rechtliches</p>
+        <h1 class="legal-title">Impressum</h1>
+        <p class="legal-intro">
+          Angaben gemäß § 5 TMG und verantwortlich für den Inhalt dieser Seiten.
+        </p>
+      </header>
+
+      <div class="legal-grid">
+        <section>
+          <h2>Verein</h2>
+          <p>
+            <strong>Level Up Culture e.V.</strong><br />
+            Wallmodenstr 49<br />
+            30625 Hannover
+          </p>
+
+          <p>
+            <strong>Vertreten durch den Vorstand:</strong><br />
+            Fabian Steinberg<br />
+            (1. Vorsitzende*r)
+          </p>
+
+          <p>
+            <strong>Kontakt</strong><br />
+            Telefon: +49 (0) 1772186997<br />
+            E-Mail: <a href="mailto:levelup.culture.ev@gmail.com">levelup.culture.ev@gmail.com</a>
+          </p>
+        </section>
+
+        <section>
+          <h2>Registereintrag</h2>
+          <p>
+            <strong>Eintragung im Vereinsregister</strong><br />
+            Registergericht: Amtsgericht Musterstadt<br />
+            Registernummer: VR 12345
+          </p>
+
+          <p>
+            <strong>Verantwortlich für den Inhalt nach § 55 Abs. 2 RStV</strong><br />
+            Max Mustermann<br />
+            Anschrift wie oben
+          </p>
+
+          <p>
+            <strong>Umsatzsteuer-ID</strong><br />
+            Umsatzsteuer-Identifikationsnummer gemäß §27 a Umsatzsteuergesetz:<br />
+            DE123456789
+          </p>
+        </section>
+      </div>
+
+      <section class="legal-section">
+        <h2>Haftung für Inhalte</h2>
+        <p>
+          Als Diensteanbieter sind wir gemäß § 7 Abs. 1 TMG für eigene Inhalte auf
+          diesen Seiten nach den allgemeinen Gesetzen verantwortlich. Nach §§ 8 bis
+          10 TMG sind wir als Diensteanbieter jedoch nicht verpflichtet, übermittelte
+          oder gespeicherte fremde Informationen zu überwachen oder nach Umständen
+          zu forschen, die auf eine rechtswidrige Tätigkeit hinweisen.
+        </p>
+        <p>
+          Verpflichtungen zur Entfernung oder Sperrung der Nutzung von Informationen
+          nach den allgemeinen Gesetzen bleiben hiervon unberührt. Eine
+          diesbezügliche Haftung ist jedoch erst ab dem Zeitpunkt der Kenntnis einer
+          konkreten Rechtsverletzung möglich. Bei Bekanntwerden von entsprechenden
+          Rechtsverletzungen werden wir diese Inhalte umgehend entfernen.
+        </p>
+      </section>
+
+      <section class="legal-section">
+        <h2>Haftung für Links</h2>
+        <p>
+          Unser Angebot enthält Links zu externen Websites Dritter, auf deren Inhalte
+          wir keinen Einfluss haben. Deshalb können wir für diese fremden Inhalte
+          auch keine Gewähr übernehmen. Für die Inhalte der verlinkten Seiten ist
+          stets der jeweilige Anbieter oder Betreiber der Seiten verantwortlich.
+        </p>
+        <p>
+          Die verlinkten Seiten wurden zum Zeitpunkt der Verlinkung auf mögliche
+          Rechtsverstöße überprüft. Rechtswidrige Inhalte waren zum Zeitpunkt der
+          Verlinkung nicht erkennbar. Eine permanente inhaltliche Kontrolle der
+          verlinkten Seiten ist jedoch ohne konkrete Anhaltspunkte einer
+          Rechtsverletzung nicht zumutbar. Bei Bekanntwerden von Rechtsverletzungen
+          werden wir derartige Links umgehend entfernen.
+        </p>
+      </section>
+
+      <section class="legal-section">
+        <h2>Urheberrecht</h2>
+        <p>
+          Die durch die Seitenbetreiber erstellten Inhalte und Werke auf diesen
+          Seiten unterliegen dem deutschen Urheberrecht. Die Vervielfältigung,
+          Bearbeitung, Verbreitung und jede Art der Verwertung außerhalb der Grenzen
+          des Urheberrechtes bedürfen der schriftlichen Zustimmung des jeweiligen
+          Autors bzw. Erstellers.
+        </p>
+        <p>
+          Soweit die Inhalte auf dieser Seite nicht vom Betreiber erstellt wurden,
+          werden die Urheberrechte Dritter beachtet. Insbesondere werden Inhalte
+          Dritter als solche gekennzeichnet. Sollten Sie trotzdem auf eine
+          Urheberrechtsverletzung aufmerksam werden, bitten wir um einen
+          entsprechenden Hinweis. Bei Bekanntwerden von Rechtsverletzungen werden wir
+          derartige Inhalte umgehend entfernen.
+        </p>
+      </section>
+    </section>
+  </main>
+
+  <style>
+    .page-legal {
+      min-height: 100vh;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 6rem 1.5rem 4rem;
+      background: var(--bg-page);
+    }
+
+    .legal-card {
+      background: var(--bg-surface);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-soft);
+      box-shadow: var(--shadow-soft);
+      padding: 2.2rem 2.1rem 2rem;
+    }
+
+    .legal-header {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-bottom: 1.8rem;
+    }
+
+    .legal-eyebrow {
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    .legal-title {
+      font-size: clamp(1.8rem, 2.6vw, 2.2rem);
+      margin: 0;
+      color: var(--text-main);
+    }
+
+    .legal-intro {
+      margin: 0.1rem 0 0;
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      max-width: 40rem;
+    }
+
+    .legal-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1.6rem;
+      margin-bottom: 1.8rem;
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 720px) {
+      .legal-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .legal-section {
+      margin-top: 1.4rem;
+      font-size: 0.95rem;
+      color: var(--text-main);
+    }
+
+    .legal-section h2 {
+      font-size: 1.05rem;
+      margin: 0 0 0.4rem;
+      color: var(--text-main);
+    }
+
+    .legal-section p {
+      margin: 0 0 0.6rem;
+      line-height: 1.7;
+      color: var(--text-muted);
+    }
+
+    .legal-card a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    .legal-card a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</BaseLayout>
