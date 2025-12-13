@@ -1,4 +1,4 @@
-export async function getGoogleEvents() {
+export async function getEvents() {
   const calendarId = import.meta.env.PUBLIC_GOOGLE_CALENDAR_ID;
   const apiKey = import.meta.env.PUBLIC_GOOGLE_API_KEY;
 

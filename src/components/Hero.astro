@@ -1,39 +1,33 @@
 ---
-import { getGoogleEvents } from "../lib/googleCalendar";
+export const prerender = false;  // 👈 WICHTIG: Seite wird jetzt bei jedem Request neu gerendert
 
-let nextEvent = null;
+// ggf. deine Imports:
+import { getEvents } from "../lib/googleCalendar";
 
-try {
-  const rawEvents = await getGoogleEvents();
-  const now = new Date();
+const events = await getEvents();
 
-  const events = (Array.isArray(rawEvents) ? rawEvents : [])
-    // nur Events mit Start-Datum
-    .map((event) => {
-      const startVal =
-        event?.start?.dateTime ||
-        event?.start?.date ||
-        null;
+const now = new Date();
+now.setHours(0, 0, 0, 0);
 
-      if (!startVal) return null;
 
-      return {
-        ...event,
-        _startDate: new Date(startVal),
-      };
-    })
-    .filter((event) => {
-      if (!event?._startDate || isNaN(event._startDate)) return false;
-      return event._startDate >= now;
-    })
-    .sort((a, b) => a._startDate.getTime() - b._startDate.getTime());
+// Nur zukünftige Events behalten
+const upcoming = events.filter((e) => {
+  const start = new Date(e.start.dateTime || e.start.date);
+  return start >= now;
+});
 
-  nextEvent = events[0] ?? null;
-} catch (err) {
-  console.error("Fehler beim Laden der Events:", err);
-  nextEvent = null;
-}
+upcoming.sort((a, b) => {
+  const aDate = new Date(a.start.dateTime || a.start.date);
+  const bDate = new Date(b.start.dateTime || b.start.date);
+  return aDate - bDate;
+});
+
+const nextEvent = upcoming[0] ?? null;
+
+
+
 ---
+
 
 
 
