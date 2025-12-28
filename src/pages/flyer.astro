@@ -344,6 +344,30 @@ const WEBSITE = "https://levelup-culture.de";
         .chip { padding: 8px 10px; }
         .feature { padding: 12px; }
       }
+
+      .logo {
+  width: clamp(58px, 5vw, 76px);
+  height: clamp(58px, 5vw, 76px);
+  border-radius: 999px;
+  background: #ffffff;
+  border: 2px solid var(--border-soft);
+
+  display: grid;
+  place-items: center;
+
+  box-shadow:
+    0 14px 30px rgba(31, 111, 156, 0.25),
+    0 0 0 10px rgba(31, 111, 156, 0.08);
+
+  flex: 0 0 auto;
+}
+
+.logo img {
+  width: 70%;
+  height: 70%;
+  object-fit: contain;
+}
+
     </style>
   </head>
 
@@ -353,7 +377,15 @@ const WEBSITE = "https://levelup-culture.de";
         <!-- HEADER -->
         <header class="header">
           <div class="brand">
-            <div class="logo" aria-hidden="true">LU</div>
+            <div class="logo" aria-hidden="true">
+  <img
+    src="/favicon.png"
+    alt="Level Up Culture e.V."
+    loading="eager"
+    decoding="async"
+  />
+</div>
+
             <div class="brandText">
               <p class="brandName">Level Up Culture e.V.</p>
               <p class="brandTag">Gaming · Kultur · Community</p>
@@ -373,7 +405,7 @@ const WEBSITE = "https://levelup-culture.de";
             <div>
               <h1 class="heroTitle">
                 Gemeinsam Kultur &amp; Gaming
-                <span>auf das nächste Level bringen.</span>
+                <span>auf das nägit chste Level bringen.</span>
               </h1>
               <p class="lead">
                 Level Up Culture e.V. ist ein gemeinnütziger Verein für Community, Gaming-Kultur und
