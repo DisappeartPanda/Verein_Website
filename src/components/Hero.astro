@@ -1,26 +1,18 @@
 ---
-export const prerender = false;  // 👈 WICHTIG: Seite wird jetzt bei jedem Request neu gerendert
+export const prerender = false;
 
-// ggf. deine Imports:
 import { getEvents } from "../lib/googleCalendar";
 
 const events = await getEvents();
 
 const now = new Date();
-now.setHours(0, 0, 0, 0);
 
-
-// Nur zukünftige Events behalten
-const upcoming = events.filter((e) => {
-  const start = new Date(e.start.dateTime || e.start.date);
-  return start >= now;
-});
-
-upcoming.sort((a, b) => {
-  const aDate = new Date(a.start.dateTime || a.start.date);
-  const bDate = new Date(b.start.dateTime || b.start.date);
-  return aDate - bDate;
-});
+const upcoming = events
+  .filter(e => new Date(e.start.dateTime || e.start.date) >= now)
+  .sort((a, b) =>
+    new Date(a.start.dateTime || a.start.date) -
+    new Date(b.start.dateTime || b.start.date)
+  );
 
 const nextEvent = upcoming[0] ?? null;
 

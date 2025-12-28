@@ -1,11 +1,11 @@
 ---
 /**
  * src/pages/flyer.astro
- * FULLSCREEN Flyer im BaseLayout-Look:
- * - stabil (kein "rumbacken"), keine transform-scales
- * - 100svh, kein Scroll
- * - QR groß & zentral
- * - ohne Nav/Footer, ohne Interaktionen
+ * Fullscreen Flyer im BaseLayout-Look:
+ * - nutzt den Screen deutlich besser (weniger Rand)
+ * - stabile Grid-Aufteilung (Header / Content / Footer)
+ * - QR groß & optisch zentral, Text sitzt sauber
+ * - keine Interaktionen, kein Scrollen
  */
 export const prerender = true;
 
@@ -23,16 +23,23 @@ const WEBSITE = "https://levelup-culture.de";
     <link rel="icon" type="image/png" sizes="192x192" href="/favicon.png" />
     <link rel="apple-touch-icon" href="/favicon.png" />
 
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="preconnect"
+      href="https://fonts.googleapis.com"
+    />
+    <link
+      rel="preconnect"
+      href="https://fonts.gstatic.com"
+      crossorigin
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
       rel="stylesheet"
     />
 
     <style>
-      /* === BaseLayout Variables === */
       :root {
+        /* ✅ BaseLayout Variablen */
         --brand-dark: #0f2f46;
         --brand-main: #1f6f9c;
         --brand-light: #5fa8d3;
@@ -53,9 +60,16 @@ const WEBSITE = "https://levelup-culture.de";
 
         --radius-lg: 1.25rem;
 
-        /* Flyer sizing */
-        --pad: clamp(16px, 2.6vw, 42px);
-        --gap: clamp(12px, 2vh, 22px);
+        /* Flyer Tuning */
+        --stage-pad: clamp(8px, 1.6vw, 16px);   /* 👈 weniger Rand -> mehr Fläche */
+        --card-pad: clamp(18px, 2.4vw, 36px);
+        --gap: clamp(14px, 2vh, 22px);
+
+        --title: clamp(2.3rem, 4.6vw, 4.2rem);
+        --lead: clamp(1rem, 1.25vw, 1.18rem);
+        --chip: clamp(0.75rem, 0.95vw, 0.9rem);
+        --h3: clamp(0.9rem, 1.05vw, 1.05rem);
+        --p: clamp(0.95rem, 1.1vw, 1.05rem);
       }
 
       * { box-sizing: border-box; }
@@ -64,16 +78,16 @@ const WEBSITE = "https://levelup-culture.de";
       body {
         margin: 0;
         font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-        color: var(--text-main);
         background: radial-gradient(circle at top, #e5edff 0, #f9fafb 40%, #f3f4f6 100%);
-        overflow: hidden; /* ✅ never scroll */
+        color: var(--text-main);
+        overflow: hidden; /* ✅ kein Scrollen */
       }
 
-      /* === Fullscreen stage === */
+      /* Bühne füllt den Screen */
       .stage {
         height: 100svh;
         width: 100%;
-        padding: var(--pad);
+        padding: var(--stage-pad);
         display: grid;
         place-items: center;
         position: relative;
@@ -90,37 +104,29 @@ const WEBSITE = "https://levelup-culture.de";
         z-index: 0;
       }
 
-      /* === Flyer shell (no transforms, no scaling) === */
+      /* Flyer nutzt den Screen deutlich besser */
       .flyer {
-        position: relative;
         z-index: 1;
-
-        width: min(1120px, 100%);
+        width: min(1400px, 100%);                /* 👈 breiter möglich */
         height: 100%;
-        max-height: calc(100svh - (2 * var(--pad)));
+        max-height: calc(100svh - (2 * var(--stage-pad)));
 
         background: rgba(255, 255, 255, 0.96);
         border: 1px solid var(--border-soft);
-        border-radius: calc(var(--radius-lg) + 0.35rem);
+        border-radius: calc(var(--radius-lg) + 0.45rem);
         box-shadow: var(--shadow-soft);
         backdrop-filter: blur(10px);
 
-        padding: var(--pad);
+        padding: var(--card-pad);
         overflow: hidden;
 
-        /* Key: fixed 3-zone grid that NEVER overflows */
         display: grid;
-        grid-template-rows: auto 1fr auto;
+        grid-template-rows: auto 1fr auto;       /* Header / Content / Footer */
         gap: var(--gap);
       }
 
-      /* === Top: brand + headline === */
-      .top {
-        display: grid;
-        gap: clamp(10px, 1.6vh, 16px);
-      }
-
-      .brandRow {
+      /* HEADER */
+      .header {
         display: flex;
         align-items: center;
         justify-content: space-between;
@@ -136,8 +142,8 @@ const WEBSITE = "https://levelup-culture.de";
       }
 
       .logo {
-        width: clamp(54px, 5.2vw, 74px);
-        height: clamp(54px, 5.2vw, 74px);
+        width: clamp(58px, 5vw, 76px);
+        height: clamp(58px, 5vw, 76px);
         border-radius: 999px;
         background: linear-gradient(135deg, var(--brand-main), var(--brand-dark));
         color: #fff;
@@ -152,17 +158,18 @@ const WEBSITE = "https://levelup-culture.de";
       .brandText { min-width: 0; }
       .brandName {
         margin: 0;
-        font-weight: 800;
+        font-weight: 900;
         letter-spacing: 0.08em;
         text-transform: uppercase;
-        font-size: clamp(1.05rem, 1.9vw, 1.45rem);
+        font-size: clamp(1.1rem, 1.6vw, 1.55rem);
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
       }
+
       .brandTag {
-        margin: 0.2rem 0 0;
-        font-size: clamp(0.7rem, 1vw, 0.82rem);
+        margin: 0.18rem 0 0;
+        font-size: clamp(0.72rem, 0.95vw, 0.86rem);
         letter-spacing: 0.25em;
         text-transform: uppercase;
         color: var(--text-muted);
@@ -177,50 +184,62 @@ const WEBSITE = "https://levelup-culture.de";
         gap: 10px;
         justify-content: flex-end;
       }
+
       .chip {
         padding: 10px 12px;
         border-radius: 999px;
         border: 1px solid var(--border-soft);
         background: rgba(31, 111, 156, 0.08);
         color: var(--brand-dark);
-        font-size: clamp(0.74rem, 1vw, 0.88rem);
+        font-size: var(--chip);
         font-weight: 700;
         white-space: nowrap;
       }
 
+      /* CONTENT: links Text + unten Features, rechts QR */
+      .content {
+        min-height: 0;
+        display: grid;
+        grid-template-columns: 1.25fr 0.75fr;
+        gap: clamp(16px, 2.2vw, 28px);
+        align-items: center;
+      }
+
+      .left {
+        min-height: 0;
+        display: grid;
+        grid-template-rows: auto auto 1fr;
+        gap: clamp(14px, 2vh, 18px);
+      }
+
       .heroTitle {
         margin: 0;
-        font-size: clamp(2.0rem, 4.6vw, 3.9rem);
+        font-size: var(--title);
         font-weight: 900;
-        line-height: 1.06;
+        line-height: 1.03;
         letter-spacing: 0.01em;
         max-width: 22ch;
       }
-      .heroTitle span { display:block; color: var(--accent); }
+
+      .heroTitle span {
+        display: block;
+        color: var(--accent);
+      }
 
       .lead {
-        margin: 0.55rem 0 0;
-        max-width: 74ch;
-        font-size: clamp(1.0rem, 1.35vw, 1.15rem);
+        margin: 0;
+        max-width: 78ch;
+        font-size: var(--lead);
         color: var(--text-muted);
         line-height: 1.65;
       }
 
-      /* === Middle: features + big centered QR ===
-         This area is the only flexible zone (1fr) and must not overflow.
-      */
-      .middle {
-        min-height: 0; /* critical: allow children to shrink */
-        display: grid;
-        grid-template-columns: 1fr auto;
-        gap: clamp(14px, 2vw, 24px);
-        align-items: center;
-      }
-
       .features {
+        min-height: 0;
         display: grid;
         grid-template-columns: repeat(3, minmax(0, 1fr));
         gap: clamp(12px, 2vw, 18px);
+        align-content: end; /* 👈 sitzt “unten” wie in deinem Screenshot */
       }
 
       .feature {
@@ -230,38 +249,39 @@ const WEBSITE = "https://levelup-culture.de";
         box-shadow: 0 16px 40px rgba(15, 23, 42, 0.04);
         padding: clamp(14px, 2vh, 18px);
       }
+
       .feature h3 {
         margin: 0 0 0.45rem;
-        font-size: clamp(0.9rem, 1.1vw, 1.05rem);
+        font-size: var(--h3);
         letter-spacing: 0.12em;
         text-transform: uppercase;
         color: var(--text-main);
       }
+
       .feature p {
         margin: 0;
-        font-size: clamp(0.95rem, 1.15vw, 1.05rem);
+        font-size: var(--p);
         color: var(--text-muted);
         line-height: 1.5;
       }
 
-      /* QR block: BIG + CENTER-ish */
+      /* QR rechts: groß und optisch mittig */
       .qrBlock {
         display: grid;
         place-items: center;
-        gap: 10px;
+        gap: 12px;
         text-align: center;
+        padding: clamp(6px, 1vw, 12px);
       }
 
       .qrBox {
-        /* BIG but safe: never exceed middle height */
-        width: clamp(240px, 30vmin, 520px);
-        height: clamp(240px, 30vmin, 520px);
-
+        width: clamp(280px, 34vmin, 520px);  /* 👈 größer */
+        height: clamp(280px, 34vmin, 520px);
         border-radius: 26px;
         background: #fff;
         border: 1px solid var(--border-soft);
         box-shadow: 0 18px 50px rgba(15, 23, 42, 0.10);
-        padding: clamp(12px, 1.2vmin, 18px);
+        padding: clamp(14px, 1.2vmin, 18px);
         display: grid;
         place-items: center;
       }
@@ -275,21 +295,22 @@ const WEBSITE = "https://levelup-culture.de";
 
       .qrText small {
         display: block;
+        font-size: clamp(0.9rem, 1vw, 1.05rem);
         color: var(--text-muted);
-        font-size: clamp(0.85rem, 1.1vw, 1rem);
       }
+
       .qrText strong {
         display: block;
         margin-top: 0.15rem;
-        color: var(--text-main);
-        font-weight: 800;
+        font-size: clamp(1rem, 1.1vw, 1.18rem);
         letter-spacing: 0.06em;
         text-transform: uppercase;
-        font-size: clamp(1.0rem, 1.25vw, 1.15rem);
+        color: var(--text-main);
+        font-weight: 800;
       }
 
-      /* === Bottom: minimal footer === */
-      .bottom {
+      /* FOOTER bleibt IM Card-Bereich und knackt nicht */
+      .footer {
         border-top: 1px solid var(--border-soft);
         padding-top: clamp(10px, 1.6vh, 16px);
         display: flex;
@@ -297,34 +318,34 @@ const WEBSITE = "https://levelup-culture.de";
         align-items: center;
         gap: 12px;
         flex-wrap: wrap;
+        font-size: clamp(0.85rem, 1vw, 0.95rem);
         color: var(--text-muted);
-        font-size: clamp(0.85rem, 1.05vw, 0.95rem);
       }
 
-      .bottom strong { color: var(--text-main); }
+      .footer strong { color: var(--text-main); }
 
-      /* === Responsive: stack middle on small widths === */
-      @media (max-width: 980px) {
-        .middle {
+      /* Responsive */
+      @media (max-width: 1100px) {
+        .content {
           grid-template-columns: 1fr;
-          justify-items: center;
+          align-items: start;
+        }
+        .qrBlock {
+          place-items: center;
+          padding-top: 0;
         }
         .features {
           grid-template-columns: 1fr;
-          width: 100%;
+          align-content: start;
         }
+        .chips { justify-content: flex-start; }
+        .header { flex-direction: column; align-items: flex-start; }
       }
 
-      /* === Extra stability on short screens: reduce chip + feature padding === */
+      /* Extra kurz: bisschen enger */
       @media (max-height: 700px) {
         .chip { padding: 8px 10px; }
         .feature { padding: 12px; }
-        .lead { line-height: 1.55; }
-      }
-
-      @media (max-height: 610px) {
-        .features { gap: 10px; }
-        .feature h3 { margin-bottom: 0.25rem; }
       }
     </style>
   </head>
@@ -332,81 +353,67 @@ const WEBSITE = "https://levelup-culture.de";
   <body>
     <div class="stage">
       <main class="flyer" aria-label="Level Up Culture Flyer">
-        <!-- TOP -->
-        <section class="top">
-          <div class="brandRow">
-            <div class="brand">
-              <div class="logo" aria-hidden="true">LU</div>
-              <div class="brandText">
-                <p class="brandName">Level Up Culture e.V.</p>
-                <p class="brandTag">Gaming · Kultur · Community</p>
-              </div>
-            </div>
-
-            <div class="chips" aria-label="Schwerpunkte">
-              <span class="chip">Community Nights</span>
-              <span class="chip">Workshops</span>
-              <span class="chip">Events & Projekte</span>
+        <!-- HEADER -->
+        <header class="header">
+          <div class="brand">
+            <div class="logo" aria-hidden="true">LU</div>
+            <div class="brandText">
+              <p class="brandName">Level Up Culture e.V.</p>
+              <p class="brandTag">Gaming · Kultur · Community</p>
             </div>
           </div>
 
-          <div>
-            <h1 class="heroTitle">
-              Gemeinsam Kultur &amp; Gaming
-              <span>auf das nächste Level bringen.</span>
-            </h1>
-            <p class="lead">
-              Level Up Culture e.V. ist ein gemeinnütziger Verein für Community, Gaming-Kultur und
-              digitale Bildung. Wir schaffen Räume für Austausch, Workshops und kreative Projekte —
-              online und vor Ort.
-            </p>
+          <div class="chips" aria-label="Schwerpunkte">
+            <span class="chip">Community Nights</span>
+            <span class="chip">Workshops</span>
+            <span class="chip">Events & Projekte</span>
           </div>
-        </section>
+        </header>
 
-        <!-- MIDDLE -->
-        <section class="middle" aria-label="Angebote und QR-Code">
-          <div class="features">
-            <article class="feature">
-              <h3>Community</h3>
-              <p>Offene Treffen, Community Nights und gemeinsames Erleben — niedrigschwellig &amp; inklusiv.</p>
-            </article>
+        <!-- CONTENT -->
+        <section class="content" aria-label="Inhalt">
+          <div class="left">
+            <div>
+              <h1 class="heroTitle">
+                Gemeinsam Kultur &amp; Gaming
+                <span>auf das nächste Level bringen.</span>
+              </h1>
+              <p class="lead">
+                Level Up Culture e.V. ist ein gemeinnütziger Verein für Community, Gaming-Kultur und
+                digitale Bildung. Wir schaffen Räume für Austausch, Workshops und kreative Projekte —
+                online und vor Ort.
+              </p>
+            </div>
 
-            <article class="feature">
-              <h3>Workshops</h3>
-              <p>Medien, Streaming, Content Creation &amp; digitale Skills — praxisnah und gemeinsam.</p>
-            </article>
+            <div class="features" aria-label="Angebote">
+              <article class="feature">
+                <h3>Community</h3>
+                <p>Offene Treffen, Community Nights und gemeinsames Erleben — niedrigschwellig &amp; inklusiv.</p>
+              </article>
 
-            <article class="feature">
-              <h3>Events</h3>
-              <p>Turniere, Themenabende, Kooperationen und Projekte, die Kultur &amp; Gaming verbinden.</p>
-            </article>
+              <article class="feature">
+                <h3>Workshops</h3>
+                <p>Medien, Streaming, Content Creation &amp; digitale Skills — praxisnah und gemeinsam.</p>
+              </article>
+
+              <article class="feature">
+                <h3>Events</h3>
+                <p>Turniere, Themenabende, Kooperationen und Projekte, die Kultur &amp; Gaming verbinden.</p>
+              </article>
+            </div>
           </div>
 
-          <div class="qrBlock">
-            <div class="qrBox" aria-label="QR-Code zur Website">
+          <div class="qrBlock" aria-label="QR Code">
+            <div class="qrBox">
               <img
-                src={`https://api.qrserver.com/v1/create-qr-code/?size=900x900&data=${encodeURIComponent(
-                  WEBSITE
-                )}`}
+                src={`https://api.qrserver.com/v1/create-qr-code/?size=1100x1100&data=${encodeURIComponent(WEBSITE)}`}
                 alt="QR-Code zur Level Up Culture Website"
               />
             </div>
-            <div class="qrText">
-              <small>Scannen &amp; Website öffnen</small>
-              <strong>{WEBSITE.replace("https://", "")}</strong>
-            </div>
-          </div>
+            
         </section>
 
-        <!-- BOTTOM -->
-        <footer class="bottom" aria-label="Footer">
-          <div>
-            Mehr Infos: <strong>{WEBSITE.replace("https://", "")}</strong>
-          </div>
-          <div>
-            © {new Date().getFullYear()} Level Up Culture e.V.
-          </div>
-        </footer>
+
       </main>
     </div>
   </body>
