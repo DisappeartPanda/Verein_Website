@@ -7,12 +7,18 @@ function condToText(c: Cond): string {
     case "ATOM":
       return c.name;
     case "NOT":
-      return `!(${condToText(c.inner)})`;
+      return `!${wrapIfNeeded(c.inner)}`;
     case "AND":
-      return `(${condToText(c.left)} && ${condToText(c.right)})`;
+      return `${wrapIfNeeded(c.left)} && ${wrapIfNeeded(c.right)}`;
     case "OR":
-      return `(${condToText(c.left)} || ${condToText(c.right)})`;
+      return `${wrapIfNeeded(c.left)} || ${wrapIfNeeded(c.right)}`;
   }
+}
+
+function wrapIfNeeded(c: Cond): string {
+  if (c.t === "ATOM") return c.name;
+  if (c.t === "NOT") return `!${wrapIfNeeded(c.inner)}`;
+  return `(${condToText(c)})`;
 }
 
 function StmtNode(props: { s: Stmt; activeLine: number | null; depth: number }) {
@@ -48,7 +54,7 @@ function StmtNode(props: { s: Stmt; activeLine: number | null; depth: number }) 
       <div style={{ display: "grid", gap: 8 }}>
         <div style={commonStyle}>
           <div>
-            <b>Zeile {s.line}</b> — <span>WHILE {condToText(s.cond)}</span>
+            <b>Zeile {s.line}</b> — <span>while {condToText(s.cond)}</span>
           </div>
         </div>
         <div style={{ display: "grid", gap: 8 }}>
@@ -60,12 +66,17 @@ function StmtNode(props: { s: Stmt; activeLine: number | null; depth: number }) 
     );
   }
 
-  // IF
+  // IF (else-if ist als else:[IF] verschachtelt – wir zeigen es optisch sauber)
+  const isElseIf =
+    s.else &&
+    s.else.length === 1 &&
+    s.else[0].t === "IF";
+
   return (
     <div style={{ display: "grid", gap: 8 }}>
       <div style={commonStyle}>
         <div>
-          <b>Zeile {s.line}</b> — <span>IF {condToText(s.cond)}</span>
+          <b>Zeile {s.line}</b> — <span>if ({condToText(s.cond)})</span>
         </div>
       </div>
 
@@ -85,8 +96,9 @@ function StmtNode(props: { s: Stmt; activeLine: number | null; depth: number }) 
               opacity: 0.75,
             }}
           >
-            ELSE
+            {isElseIf ? "else if" : "else"}
           </div>
+
           {s.else.map((x, i) => (
             <StmtNode key={`e-${i}`} s={x} activeLine={activeLine} depth={depth + 1} />
           ))}
