@@ -1,0 +1,403 @@
+---
+import NavBarOhneMovement from "../components/NavBarOhneMovement.astro";
+import SiteFooter from "../components/SiteFooter.astro";
+
+
+const {
+  title = "Level Up Culture e.V.",
+  description = "Verein für Kultur, Gaming & Community.",
+} = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang="de">
+
+  <head>
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="apple-touch-icon" href="/favicon.png" />
+
+
+
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+/>
+
+
+    <!-- Font ähnlich Perspective-Style -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="app-body">
+    <NavBarOhneMovement />
+
+    <slot />
+
+<SiteFooter />
+
+    <style is:global>
+      :root {
+  /* ✅ Farben aus dem Favicon abgeleitet */
+  --brand-dark: #0f2f46;     /* dunkles Navy aus der rechten Hand */
+  --brand-main: #1f6f9c;     /* mittleres Blau */
+  --brand-light: #5fa8d3;    /* helles Blau */
+  --brand-soft: #e8f3fb;    /* sehr helles Blau für Hintergründe */
+
+  /* ✅ Seitenfarben */
+  --bg-page: #f4f9fc;
+  --bg-surface: #ffffff;
+  --bg-soft: var(--brand-soft);
+
+  /* ✅ Texte */
+  --text-main: #0f2f46;
+  --text-muted: #5b7285;
+
+  /* ✅ Akzent / Buttons */
+  --accent: var(--brand-main);
+  --accent-soft: rgba(31, 111, 156, 0.15);
+
+  /* ✅ Rahmen & Schatten */
+  --border-soft: rgba(15, 47, 70, 0.12);
+  --shadow-soft: 0 18px 45px rgba(15, 47, 70, 0.15);
+
+  --radius-lg: 1.25rem;
+}
+
+html,
+body {
+  overflow-x: hidden;
+
+}
+
+      
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+  scroll-behavior: smooth;
+}
+
+/* Damit Anker-Sprünge nicht am oberen Bildschirm kleben */
+section[id] {
+  scroll-margin-top: 80px;
+}
+
+/* Cards leichter “floaten” lassen */
+.card {
+  transition:
+    transform 0.16s ease,
+    box-shadow 0.16s ease,
+    border-color 0.16s ease,
+    background 0.16s ease;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 18px 45px rgba(15, 23, 42, 0.12);
+  border-color: rgba(37, 99, 235, 0.5);
+}
+
+
+      body.app-body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont,
+          "Segoe UI", sans-serif;
+        background: radial-gradient(circle at top, #e5edff 0, #f9fafb 40%, #f3f4f6 100%);
+        color: var(--text-main);
+      }
+
+      img {
+        max-width: 100%;
+        display: block;
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      .page-root {
+        min-height: 100vh;
+      }
+
+      /* Buttons – SaaS-Style */
+      .btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  padding: 0.9rem 1.7rem;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition:
+    transform 0.14s ease,
+    box-shadow 0.14s ease,
+    background 0.14s ease,
+    border-color 0.14s ease,
+    color 0.14s ease;
+}
+
+
+     .btn-primary {
+  background: linear-gradient(
+    135deg,
+    var(--brand-main),
+    var(--brand-dark)
+  );
+  color: #ffffff;
+  box-shadow: 0 14px 30px rgba(31, 111, 156, 0.35);
+}
+
+.btn-primary:hover {
+  box-shadow: 0 18px 40px rgba(31, 111, 156, 0.45);
+}
+
+.btn-secondary {
+  background: #ffffff;
+  border-color: var(--border-soft);
+  color: var(--brand-dark);
+}
+
+.btn-secondary:hover {
+  border-color: var(--brand-main);
+  color: var(--brand-main);
+}
+
+
+      /* Sections & Layout */
+      .section {
+        padding: 3.5rem 1.5rem;
+      }
+
+      .section-inner {
+        max-width: 1120px;
+        margin: 0 auto;
+      }
+
+      .section-inner-narrow {
+        max-width: 760px;
+        margin: 0 auto;
+      }
+
+      .section h2 {
+  margin: 0 0 0.75rem;
+
+  /* ✅ ca. 75 % der Hero-Brand-Größe */
+  font-size: clamp(1.5rem, 3.3vw, 2.4rem);
+
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+
+      .section-text {
+  font-size: 1.05rem;
+  color: var(--text-main);   /* ✅ nicht mehr grau */
+  line-height: 1.8;
+  max-width: 720px;
+  margin-top: 0.8rem;
+}
+
+
+      .card {
+        background: var(--bg-surface);
+        border-radius: var(--radius-lg);
+        border: 1px solid var(--border-soft);
+        box-shadow: 0 16px 40px rgba(15, 23, 42, 0.04);
+        padding: 1.4rem 1.5rem;
+      }
+
+      /* Grids */
+      .grid-3 {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 1.4rem;
+      }
+
+      @media (min-width: 900px) {
+        .grid-3 {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+      }
+
+      /* Timeline */
+      .timeline {
+        display: grid;
+        gap: 1.2rem;
+      }
+
+      .timeline-item {
+        background: #ffffff;
+        border-radius: 1rem;
+        border: 1px solid var(--border-soft);
+        padding: 1.3rem 1.3rem;
+        box-shadow: 0 10px 24px rgba(15, 23, 42, 0.04);
+      }
+
+      .timeline-meta {
+        font-size: 0.85rem;
+        color: var(--text-muted);
+        margin: 0.2rem 0 0.5rem;
+      }
+
+      .timeline-text {
+        margin: 0;
+        font-size: 0.95rem;
+        color: var(--text-muted);
+      }
+
+      /* Checkliste */
+      .list-check {
+        list-style: none;
+        padding: 0;
+        margin: 0 0 1.6rem;
+        display: grid;
+        gap: 0.4rem;
+        font-size: 0.98rem;
+      }
+
+      .list-check li::before {
+        content: "✓";
+        margin-right: 0.45rem;
+        color: var(--accent);
+        font-weight: 700;
+      }
+
+      /* Kontaktformular */
+      .contact-layout {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 2rem;
+      }
+
+      @media (min-width: 960px) {
+        .contact-layout {
+          grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+          align-items: flex-start;
+        }
+      }
+
+      .contact-list {
+        list-style: none;
+        padding: 0;
+        margin: 0 0 1rem;
+        font-size: 0.97rem;
+      }
+
+      .contact-list li {
+        margin-bottom: 0.35rem;
+      }
+
+      .contact-form {
+        background: #ffffff;
+        border-radius: var(--radius-lg);
+        border: 1px solid var(--border-soft);
+        box-shadow: 0 18px 50px rgba(15, 23, 42, 0.07);
+        padding: 1.7rem 1.5rem;
+        display: grid;
+        gap: 0.9rem;
+        font-size: 0.9rem;
+      }
+
+      .form-field {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+      }
+
+      .form-field label {
+        font-weight: 500;
+      }
+
+      .form-field input,
+      .form-field select,
+      .form-field textarea {
+        border-radius: 999px;
+        border: 1px solid #d4d4d8;
+        padding: 0.6rem 0.85rem;
+        font: inherit;
+        outline: none;
+        transition:
+          border-color 0.14s ease,
+          box-shadow 0.14s ease,
+          background 0.14s ease;
+        background: #f9fafb;
+      }
+
+      .form-field textarea {
+        border-radius: 0.9rem;
+        min-height: 110px;
+        resize: vertical;
+      }
+
+      .form-field input:focus,
+      .form-field select:focus,
+      .form-field textarea:focus {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.4);
+        background: #ffffff;
+      }
+
+      .form-submit {
+        margin-top: 0.4rem;
+        width: 100%;
+        justify-content: center;
+      }
+
+      /* Footer */
+      .footer {
+        border-top: 1px solid var(--border-soft);
+        background: #ffffff;
+        margin-top: 2rem;
+      }
+
+      .footer-inner {
+        max-width: 1120px;
+        margin: 0 auto;
+        padding: 1.2rem 1.5rem 1.4rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.35rem;
+        font-size: 0.86rem;
+        color: var(--text-muted);
+      }
+
+      .footer-inner a {
+  color: var(--text-muted);
+  text-decoration: none;
+}
+
+.footer-inner a:hover {
+  color: var(--accent);
+  text-decoration: underline;
+}
+
+
+      @media (min-width: 640px) {
+        .footer-inner {
+          flex-direction: row;
+          align-items: center;
+          justify-content: space-between;
+        }
+      }
+
+    
+    </style>
+  </body>
+</html>

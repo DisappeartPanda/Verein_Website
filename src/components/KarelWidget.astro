@@ -1,0 +1,26 @@
+---
+import KarelGame from "./KarelGame";
+---
+
+<section class="karel-widget">
+  <header class="karel-header">
+    <h2>Karel</h2>
+    <p>Drag & Drop → ParseTree Viewer</p>
+  </header>
+
+  <KarelGame client:load />
+</section>
+
+<style>
+  .karel-widget {
+    font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    border: 1px solid rgba(0,0,0,.12);
+    border-radius: 14px;
+    padding: 16px;
+    background: rgba(255,255,255,.9);
+  }
+
+  .karel-header { margin-bottom: 12px; }
+  .karel-header h2 { margin: 0; font-size: 18px; }
+  .karel-header p { margin: 4px 0 0; font-size: 13px; opacity: .75; }
+</style>
