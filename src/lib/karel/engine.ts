@@ -185,3 +185,62 @@ export function cmdPut(s: State) {
   s.world.beepers.set(k, n + 1);
   s.robot.bag--;
 }
+
+export function goalReachable(s: State): boolean {
+  const { world, robot } = s;
+  const W = world.width;
+  const H = world.height;
+
+  const seen = new Set<string>();
+  const q: Array<{ x: number; y: number }> = [{ x: robot.x, y: robot.y }];
+
+  const key = (x: number, y: number) => `${x},${y}`;
+
+  const inBoundsXY = (x: number, y: number) => x >= 0 && y >= 0 && x < W && y < H;
+
+  // Prüft, ob man von (x,y) nach (nx,ny) gehen darf (keine Wand zwischen den Zellen)
+  const canStep = (x: number, y: number, nx: number, ny: number) => {
+    if (!inBoundsXY(nx, ny)) return false;
+
+    // Richtung bestimmen
+    let dir: Dir;
+    if (nx === x && ny === y - 1) dir = "N";
+    else if (nx === x && ny === y + 1) dir = "S";
+    else if (nx === x + 1 && ny === y) dir = "E";
+    else if (nx === x - 1 && ny === y) dir = "W";
+    else return false;
+
+    // gleiche Logik wie in isDirClear, aber für beliebige Zellen:
+    const opp: Dir = dir === "N" ? "S" : dir === "S" ? "N" : dir === "E" ? "W" : "E";
+
+    if (world.walls.has(keyWall(x, y, dir))) return false;
+    if (world.walls.has(keyWall(nx, ny, opp))) return false;
+
+    return true;
+  };
+
+  while (q.length) {
+    const cur = q.shift()!;
+    const k = key(cur.x, cur.y);
+    if (seen.has(k)) continue;
+    seen.add(k);
+
+    // Ziel: Reihe 8 erreicht (bei dir: y===0)
+    if (cur.y === 0) return true;
+
+    const nbs = [
+      { x: cur.x, y: cur.y - 1 },
+      { x: cur.x, y: cur.y + 1 },
+      { x: cur.x - 1, y: cur.y },
+      { x: cur.x + 1, y: cur.y },
+    ];
+
+    for (const nb of nbs) {
+      if (!seen.has(key(nb.x, nb.y)) && canStep(cur.x, cur.y, nb.x, nb.y)) {
+        q.push(nb);
+      }
+    }
+  }
+
+  return false;
+}
