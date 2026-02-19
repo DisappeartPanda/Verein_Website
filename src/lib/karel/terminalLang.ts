@@ -1,5 +1,5 @@
 // src/lib/karel/terminalLang.ts
-import { goalReachable as isGoalReachable } from "./engine";
+
 import type { State } from "./engine";
 import {
   beepersHere,
@@ -7,21 +7,23 @@ import {
   isFrontClear,
   isLeftClear,
   isRightClear,
+  goalReachable as isGoalReachable, // ✅ BFS/Reachability aus engine.ts (wenn vorhanden)
 } from "./engine";
 
-/** ======= Types ======= */
+/** ======================
+ * Language Types
+ * ====================== */
 
-// Commands (wir bleiben tolerant: Xtext hat nur 3, Engine kann mehr)
+// Commands (Xtext current: forward/turnLeft/turnRight; legacy: pick/put optional)
 export type CmdName = "forward" | "turnLeft" | "turnRight" | "pick" | "put";
 
-// Atom Conditions (Xtext current: obstacle* | won | goalReachable)
+// Atoms (Xtext current: obstacle* | won | goalReachable; legacy: notAtLine8, beepers*)
 export type AtomName =
   | "obstacleAhead"
   | "obstacleLeft"
   | "obstacleRight"
   | "won"
   | "goalReachable"
-  // legacy (falls noch genutzt)
   | "notAtLine8"
   | "beepersHere"
   | "beeperInBag";
@@ -37,16 +39,10 @@ export type Stmt =
   | { t: "IF"; cond: Cond; then: Stmt[]; else?: Stmt[]; line: number }
   | { t: "WHILE"; cond: Cond; body: Stmt[]; line: number };
 
-/**
- * Semantik-Mapping zur Engine:
- * - obstacleAhead  => Wand vorne (also NICHT front clear)
- * - obstacleLeft   => Wand links (also NICHT left clear)
- * - obstacleRight  => Wand rechts (also NICHT right clear)
- * - goalReachable  => hier pragmatisch: front clear (du kannst später Pathfinding ergänzen)
- * - won            => state.won
- * - notAtLine8     => !won (legacy)
- * - beepersHere / beeperInBag => engine helpers (legacy)
- */
+/** ======================
+ * Condition evaluation
+ * ====================== */
+
 export function evalCond(c: Cond, s: State): boolean {
   switch (c.t) {
     case "NOT":
@@ -64,6 +60,7 @@ export function evalCond(c: Cond, s: State): boolean {
         case "obstacleRight":
           return !isRightClear(s);
         case "goalReachable":
+          // ✅ global reachability check (BFS) – muss in engine.ts existieren
           return isGoalReachable(s);
         case "won":
           return !!s.won;
@@ -77,7 +74,9 @@ export function evalCond(c: Cond, s: State): boolean {
   }
 }
 
-/** ======= Tokenizer ======= */
+/** ======================
+ * Tokenizer
+ * ====================== */
 
 type Sym = "{" | "}" | "(" | ")" | "=" | ";" | "." | "!" | "&&" | "||";
 
@@ -132,7 +131,7 @@ function tokenize(src: string): Tok[] {
       continue;
     }
 
-    // // comments
+    // comment //
     if (ch === "/" && src[i + 1] === "/") {
       i += 2;
       while (i < src.length && src[i] !== "\n") i++;
@@ -184,7 +183,9 @@ function tokenize(src: string): Tok[] {
   return toks;
 }
 
-/** ======= Parser ======= */
+/** ======================
+ * Text Parser (Xtext current + legacy tolerant)
+ * ====================== */
 
 class Parser {
   private toks: Tok[];
@@ -240,8 +241,8 @@ class Parser {
 
   /**
    * Start (tolerant):
-   * - Xtext current: (program ...)+ active=ID [optional '.' or ';']
-   * - Legacy:        (program ...)+ active=ID.   (oder active=ID)
+   * - Xtext current: (program ID { ... };)+ active=ID [optional '.' or ';']
+   * - Legacy:        (program ID = ... ;)+ active=ID. (oder active=ID)
    */
   parseStart(): Stmt[] {
     const programs = new Map<string, Stmt[]>();
@@ -266,7 +267,7 @@ class Parser {
       if (!prog) throw new Error(`Unbekanntes active-Programm "${activeName}"`);
 
       this.skipEol();
-      // optional trailing '.' or ';' (tolerant)
+      // tolerant: optional trailing '.' or ';'
       this.acceptSym(".");
       this.acceptSym(";");
       this.skipEol();
@@ -275,6 +276,7 @@ class Parser {
         const rest = this.peek();
         throw new Error(`Unerwarteter Inhalt nach active=... in Zeile ${rest.line}`);
       }
+
       return prog;
     }
 
@@ -288,63 +290,25 @@ class Parser {
     this.skipEol();
 
     const nxt = this.peek();
+
+    // Xtext current: program ID { ... } ;
     if (isSymTok(nxt) && nxt.v === "{") {
-      // Xtext current: program ID { ProgramDefinition } ;
       this.next(); // '{'
-      const stmts = this.parseProgramDefinitionInsideProgramBraces();
-      this.skipEol();
+      const stmts = this.parseStatementsUntil("}");
       this.expectSym("}");
       this.skipEol();
-      this.expectSym(";");
+      this.acceptSym(";");
       return { name, stmts };
     }
 
-    // legacy: program ID = ... ;
+    // Legacy: program ID = ... ;
     this.expectSym("=");
     this.skipEol();
-    const stmts: Stmt[] = [];
-    while (true) {
-      this.skipEol();
-      const t = this.peek();
-      if (isSymTok(t) && t.v === ";") {
-        this.next();
-        break;
-      }
-      if (isEofTok(t)) throw new Error(`Programm "${name}" nicht mit ";" beendet`);
-      stmts.push(this.parseStmt());
-      this.skipEol();
-      // optional statement separator
-      if (this.acceptSym(";")) {
-        this.skipEol();
-        const after = this.peek();
-        if (isEofTok(after) || (isIdTok(after) && (after.v === "active" || after.v === "program"))) break;
-      }
-    }
+    const stmts = this.parseStatementsUntil(";");
+    this.acceptSym(";");
     return { name, stmts };
   }
 
-  /** ProgramDefinition im aktuellen Xtext: Empty | (statements+=Statement)+  */
-  private parseProgramDefinitionInsideProgramBraces(): Stmt[] {
-    const stmts: Stmt[] = [];
-    this.skipEol();
-
-    // Empty erlaubt: direkt '}' danach
-    while (true) {
-      const t = this.peek();
-      if (isSymTok(t) && t.v === "}") break;
-      if (isEofTok(t)) throw new Error(`Programm-Block nicht geschlossen (fehlendes "}")`);
-      stmts.push(this.parseStmt());
-      this.skipEol();
-      // in Xtext current gibt es im Program-Body KEIN Semikolon-Zwang,
-      // aber wir erlauben ihn tolerant:
-      this.acceptSym(";");
-      this.skipEol();
-    }
-
-    return stmts;
-  }
-
-  /** Active: 'active=' program=[Program] (tolerant: optional '.' oder ';') */
   private parseActive(): string {
     this.expectKw("active");
     this.skipEol();
@@ -352,6 +316,27 @@ class Parser {
     this.skipEol();
     const { v: name } = this.expectId();
     return name;
+  }
+
+  /** Parse statements until a symbol is encountered (endSym) */
+  private parseStatementsUntil(endSym: Sym): Stmt[] {
+    const stmts: Stmt[] = [];
+    this.skipEol();
+
+    while (true) {
+      const t = this.peek();
+      if (isSymTok(t) && t.v === endSym) break;
+      if (isEofTok(t)) throw new Error(`Unerwartetes EOF (fehlendes "${endSym}")`);
+
+      stmts.push(this.parseStmt());
+
+      this.skipEol();
+      // tolerant: optional ';' as separator (inside blocks / legacy)
+      this.acceptSym(";");
+      this.skipEol();
+    }
+
+    return stmts;
   }
 
   private parseStmt(): Stmt {
@@ -369,8 +354,6 @@ class Parser {
     const { v, line } = this.expectId();
     const name = v as CmdName;
 
-    // Xtext current hat nur forward/turnLeft/turnRight,
-    // wir lassen pick/put für legacy weiterhin zu.
     const ok =
       name === "forward" ||
       name === "turnLeft" ||
@@ -382,7 +365,7 @@ class Parser {
     return { t: "CMD", name, line };
   }
 
-  /** Xtext current: if '(' cond ('&&' cond)* ')' block (elseIf)* (else)? */
+  /** if '(' cond ')' block (else if ...)* (else ...)? */
   private parseIf(): Stmt {
     const { line } = this.expectKw("if");
     this.skipEol();
@@ -394,7 +377,6 @@ class Parser {
 
     this.skipEol();
 
-    // else / else if chain
     const nxt = this.peek();
     if (isIdTok(nxt) && nxt.v === "else") {
       this.next(); // else
@@ -402,7 +384,6 @@ class Parser {
 
       const afterElse = this.peek();
       if (isIdTok(afterElse) && afterElse.v === "if") {
-        // else if
         const elseIf = this.parseIf();
         return { t: "IF", cond, then, else: [elseIf], line };
       }
@@ -414,7 +395,7 @@ class Parser {
     return { t: "IF", cond, then, line };
   }
 
-  /** Xtext current: while '(' cond ('&&' cond)* ')' block  */
+  /** while '(' cond ')' block */
   private parseWhile(): Stmt {
     const { line } = this.expectKw("while");
     this.skipEol();
@@ -426,33 +407,17 @@ class Parser {
     return { t: "WHILE", cond, body, line };
   }
 
-  /** Xtext current: Block: '{' (statements+=Statement)+ '}' (mindestens 1), aber wir erlauben leer tolerant */
   private parseBlock(): Stmt[] {
     this.skipEol();
     this.expectSym("{");
-    const out: Stmt[] = [];
-    this.skipEol();
-
-    while (true) {
-      const t = this.peek();
-      if (isSymTok(t) && t.v === "}") {
-        this.next();
-        break;
-      }
-      if (isEofTok(t)) throw new Error(`Block nicht geschlossen (fehlendes "}")`);
-      out.push(this.parseStmt());
-      this.skipEol();
-      // tolerant: optional ';' zwischen statements
-      this.acceptSym(";");
-      this.skipEol();
-    }
-
-    return out;
+    const stmts = this.parseStatementsUntil("}");
+    this.expectSym("}");
+    return stmts;
   }
 
-  /** ===== Condition Parser (tolerant, superset) =====
-   * Xtext current: ('!')? ATOM, kombiniert nur mit &&
-   * Wir akzeptieren zusätzlich: || und Klammern, damit alte Dateien weiter gehen.
+  /** ===== Condition grammar (tolerant superset) =====
+   * Xtext current: ('!')? ATOM, joined with &&
+   * We also accept || and parentheses to stay compatible with earlier inputs.
    */
 
   private parseCondUntil(endSym: Sym): Cond {
@@ -522,7 +487,6 @@ class Parser {
         name === "obstacleRight" ||
         name === "won" ||
         name === "goalReachable" ||
-        // legacy:
         name === "notAtLine8" ||
         name === "beepersHere" ||
         name === "beeperInBag";
@@ -539,9 +503,12 @@ class Parser {
   }
 }
 
-/** ======= JSON Support (flexibel) ======= */
+/** ======================
+ * JSON Support (accepts multiple schemas)
+ * ====================== */
 
 type JsonAny = any;
+
 function isObj(x: any): x is Record<string, any> {
   return !!x && typeof x === "object" && !Array.isArray(x);
 }
@@ -550,6 +517,7 @@ function asCmdName(x: any): CmdName {
   if (x === "forward" || x === "turnLeft" || x === "turnRight" || x === "pick" || x === "put") return x;
   throw new Error(`JSON: Unbekanntes Command "${String(x)}"`);
 }
+
 function asAtomName(x: any): AtomName {
   const v = String(x);
   const ok =
@@ -565,45 +533,51 @@ function asAtomName(x: any): AtomName {
   return v as AtomName;
 }
 
-function jsonToCond(node: any): Cond {
-  // ✅ NEU: String-Conditions erlauben
+/**
+ * Accepts:
+ * - object conditions: {type:"and", left:..., right:...} etc.
+ * - string conditions: "!won && obstacleLeft"
+ */
+function jsonToCond(node: JsonAny): Cond {
+  // ✅ String condition support
   if (typeof node === "string") {
-    // sehr einfacher Parser:
-    // erlaubt: "!won", "won", "obstacleAhead", "a && b", "a || b"
-    // (ohne Klammern; reicht für die meisten JSON-Exports)
     const s = node.trim();
     if (!s) throw new Error("JSON: condition ist leer");
 
-    // Split OR
-    const orParts = s.split("||").map((x) => x.trim()).filter(Boolean);
-    const parseAndChain = (t: string): Cond => {
-      const andParts = t.split("&&").map((x) => x.trim()).filter(Boolean);
-      const parseAtomOrNot = (a: string): Cond => {
-        const aa = a.trim();
-        if (aa.startsWith("!")) {
-          const innerName = aa.slice(1).trim();
-          if (!innerName) throw new Error(`JSON: ungültige condition "${node}"`);
-          return { t: "NOT", inner: { t: "ATOM", name: asAtomName(innerName) } };
+    // No parentheses parsing here; handles common chains: a && b || !c
+    const splitOr = s.split("||").map((x) => x.trim()).filter(Boolean);
+
+    const parseAndChain = (chunk: string): Cond => {
+      const parts = chunk.split("&&").map((x) => x.trim()).filter(Boolean);
+      if (parts.length === 0) throw new Error(`JSON: ungültige condition "${s}"`);
+
+      const parseAtomOrNot = (p: string): Cond => {
+        const pp = p.trim();
+        if (pp.startsWith("!")) {
+          const inner = pp.slice(1).trim();
+          if (!inner) throw new Error(`JSON: ungültige condition "${s}"`);
+          return { t: "NOT", inner: { t: "ATOM", name: asAtomName(inner) } };
         }
-        return { t: "ATOM", name: asAtomName(aa) };
+        return { t: "ATOM", name: asAtomName(pp) };
       };
 
-      let cur = parseAtomOrNot(andParts[0]);
-      for (let i = 1; i < andParts.length; i++) {
-        cur = { t: "AND", left: cur, right: parseAtomOrNot(andParts[i]) };
+      let cur = parseAtomOrNot(parts[0]);
+      for (let i = 1; i < parts.length; i++) {
+        cur = { t: "AND", left: cur, right: parseAtomOrNot(parts[i]) };
       }
       return cur;
     };
 
-    let cur = parseAndChain(orParts[0]);
-    for (let i = 1; i < orParts.length; i++) {
-      cur = { t: "OR", left: cur, right: parseAndChain(orParts[i]) };
+    let cur = parseAndChain(splitOr[0]);
+    for (let i = 1; i < splitOr.length; i++) {
+      cur = { t: "OR", left: cur, right: parseAndChain(splitOr[i]) };
     }
     return cur;
   }
 
-  // bisheriges Verhalten: Objekt-Condition
+  // Object condition support
   if (!isObj(node)) throw new Error(`JSON: Condition muss Objekt sein`);
+
   const t = String(node.t ?? node.type ?? "").toLowerCase();
 
   if (t === "atom") return { t: "ATOM", name: asAtomName(node.name ?? node.atom) };
@@ -611,12 +585,11 @@ function jsonToCond(node: any): Cond {
   if (t === "and") return { t: "AND", left: jsonToCond(node.left), right: jsonToCond(node.right) };
   if (t === "or") return { t: "OR", left: jsonToCond(node.left), right: jsonToCond(node.right) };
 
-  // tolerant: {name:"won"} als Atom
-  if (node.name) return { t: "ATOM", name: asAtomName(node.name) };
+  // tolerant: {name:"won"} means atom
+  if (node.name != null) return { t: "ATOM", name: asAtomName(node.name) };
 
   throw new Error(`JSON: Unbekannter Condition-Knoten`);
 }
-
 
 function jsonToStmtArray(arr: JsonAny, lc: { n: number }): Stmt[] {
   if (!Array.isArray(arr)) throw new Error(`JSON: Erwartet Array von Statements`);
@@ -625,72 +598,83 @@ function jsonToStmtArray(arr: JsonAny, lc: { n: number }): Stmt[] {
 
 function jsonToStmt(node: JsonAny, lc: { n: number }): Stmt {
   if (!isObj(node)) throw new Error(`JSON: Statement muss Objekt sein`);
+
   const line = Number.isFinite(node.line) ? Number(node.line) : lc.n++;
   const t = String(node.t ?? node.type ?? "").toLowerCase();
 
+  // CMD / move
   if (t === "cmd" || t === "move" || node.cmd || node.command) {
     const name = node.name ?? node.cmd ?? node.command;
     return { t: "CMD", name: asCmdName(name), line };
   }
 
-  if (t === "if") {
-    const cond = jsonToCond(node.cond ?? node.condition);
-    const thenPart = jsonToStmtArray(node.then ?? node.thenBody ?? [], lc);
-    let elsePart: Stmt[] | undefined;
-
-    if (node.else != null) {
-      elsePart = Array.isArray(node.else) ? jsonToStmtArray(node.else, lc) : [jsonToStmt(node.else, lc)];
-    }
-    // schema: elseIfs?: [...]
-    if (node.elseIfs && Array.isArray(node.elseIfs) && node.elseIfs.length) {
-      // wir hängen else-if als else:[IF] an (wie im Text-Parser)
-      const chain = node.elseIfs.reduceRight((acc: Stmt[] | undefined, cur: any) => {
-        const ifNode: Stmt = {
-          t: "IF",
-          line: Number.isFinite(cur.line) ? Number(cur.line) : lc.n++,
-          cond: jsonToCond(cur.cond ?? cur.condition),
-          then: jsonToStmtArray(cur.then ?? cur.block ?? cur.body ?? [], lc),
-          else: acc,
-        };
-        return [ifNode];
-      }, elsePart);
-      elsePart = chain;
-    }
-
-    return elsePart ? { t: "IF", cond, then: thenPart, else: elsePart, line } : { t: "IF", cond, then: thenPart, line };
-  }
-
+  // WHILE
   if (t === "while") {
     const cond = jsonToCond(node.cond ?? node.condition);
     const body = jsonToStmtArray(node.body ?? node.block ?? [], lc);
     return { t: "WHILE", cond, body, line };
   }
 
+  // IF (supports elseIfs chain + else)
+  if (t === "if") {
+    const cond = jsonToCond(node.cond ?? node.condition);
+    const thenPart = jsonToStmtArray(node.then ?? [], lc);
+
+    let elsePart: Stmt[] | undefined;
+
+    // else
+    if (node.else != null) {
+      elsePart = Array.isArray(node.else) ? jsonToStmtArray(node.else, lc) : [jsonToStmt(node.else, lc)];
+    }
+
+    // elseIfs: [{condition, then}, ...] -> nested IF chain in else:[IF]
+    if (node.elseIfs && Array.isArray(node.elseIfs) && node.elseIfs.length) {
+      for (let i = node.elseIfs.length - 1; i >= 0; i--) {
+        const eif = node.elseIfs[i];
+        if (!isObj(eif)) throw new Error(`JSON: elseIfs[${i}] muss Objekt sein`);
+
+        const ifNode: Stmt = {
+          t: "IF",
+          line: Number.isFinite(eif.line) ? Number(eif.line) : lc.n++,
+          cond: jsonToCond(eif.cond ?? eif.condition),
+          then: jsonToStmtArray(eif.then ?? [], lc),
+          else: elsePart,
+        };
+
+        elsePart = [ifNode];
+      }
+    }
+
+    return elsePart
+      ? { t: "IF", cond, then: thenPart, else: elsePart, line }
+      : { t: "IF", cond, then: thenPart, line };
+  }
+
   throw new Error(`JSON: Unbekannter Statement-Typ "${String(node.t ?? node.type)}"`);
 }
 
 /**
- * JSON Root akzeptiert mehrere Schemata:
+ * JSON Root accepts:
  * A) { active:"main", programs:{ main:[...] } }
- * B) { programName:"...", steps:[...] } (dein “steps”-Schema)
- * C) direkt Array [...]
+ * B) { programName:"...", steps:[...] }  (your steps schema)
+ * C) direct array [...]
  */
 function parseJsonRoot(root: JsonAny): Stmt[] {
   const lc = { n: 1 };
 
-  // A
+  // A: programs+active
   if (isObj(root) && typeof root.active === "string" && isObj(root.programs)) {
     const prog = root.programs[root.active];
     if (!prog) throw new Error(`JSON: active="${root.active}" nicht in programs gefunden`);
     return jsonToStmtArray(prog, lc);
   }
 
-  // B
+  // B: steps schema
   if (isObj(root) && Array.isArray(root.steps)) {
     return jsonToStmtArray(root.steps, lc);
   }
 
-  // C
+  // C: direct array
   if (Array.isArray(root)) {
     return jsonToStmtArray(root, lc);
   }
@@ -698,12 +682,14 @@ function parseJsonRoot(root: JsonAny): Stmt[] {
   throw new Error(`JSON: Unbekanntes Root-Format`);
 }
 
-/** ======= Public API: auto JSON vs Text ======= */
+/** ======================
+ * Public API: auto JSON vs Text
+ * ====================== */
 
 export function parseScript(src: string): Stmt[] {
   const trimmed = src.trimStart();
 
-  // JSON erkennen
+  // JSON mode
   if (trimmed.startsWith("{") || trimmed.startsWith("[")) {
     try {
       const obj = JSON.parse(trimmed);
@@ -714,7 +700,7 @@ export function parseScript(src: string): Stmt[] {
     }
   }
 
-  // Text (Xtext current oder legacy)
+  // Text mode (Xtext current + legacy)
   const toks = tokenize(src);
   const p = new Parser(toks);
   return p.parseStart();
